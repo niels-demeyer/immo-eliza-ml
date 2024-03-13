@@ -17,7 +17,7 @@ class ImmoClass:
     # Load the houses data
     def load_houses_data_pandas(self):
         script_dir = os.path.dirname(__file__)
-        rel_path = "data\raw\properties.csv"
+        rel_path = r"data\raw\properties.csv"
         file_path = os.path.join(script_dir, rel_path)
         self.houses_data = pd.read_csv(file_path)
 

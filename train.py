@@ -4,3 +4,4 @@ from ImmoClass_file import ImmoClass
 immo = ImmoClass()
 
 print(immo.houses_data.head())
+print(immo.houses_data.info())
