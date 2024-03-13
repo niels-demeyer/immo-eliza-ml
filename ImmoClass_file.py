@@ -14,12 +14,45 @@ class ImmoClass:
         # load the data
         self.load_houses_data_pandas()
 
+        # clean the data
+        self.clean_data()
+
     # Load the houses data
     def load_houses_data_pandas(self):
         script_dir = os.path.dirname(__file__)
         rel_path = r"data\raw\properties.csv"
         file_path = os.path.join(script_dir, rel_path)
         self.houses_data = pd.read_csv(file_path)
+
+    def clean_data(self):
+        # Convert data types
+        cols_to_convert = [
+            "latitude",
+            "longitude",
+            "construction_year",
+            "total_area_sqm",
+            "surface_land_sqm",
+            "terrace_sqm",
+            "garden_sqm",
+            "primary_energy_consumption_sqm",
+            "cadastral_income",
+        ]
+        cols_to_convert = [
+            col for col in cols_to_convert if col in self.houses_data.columns
+        ]
+        self.houses_data[cols_to_convert] = self.houses_data[cols_to_convert].apply(
+            pd.to_numeric, errors="coerce"
+        )
+        self.houses_data[cols_to_convert] = self.houses_data[cols_to_convert].apply(
+            pd.to_numeric, errors="coerce"
+        )
+
+        # Handle missing values
+
+        # self.houses_data.fillna(self.houses_data.mean(), inplace=True)
+
+        # Remove duplicates
+        self.houses_data.drop_duplicates(inplace=True)
 
     def streamlit_app(self):
         st.set_page_config(page_title="Belgium Real Estate Analysis", layout="wide")
