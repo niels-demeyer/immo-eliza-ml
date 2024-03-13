@@ -10,6 +10,8 @@ from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 from sklearn.impute import SimpleImputer
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
 
 
 class ImmoClass:
@@ -24,6 +26,9 @@ class ImmoClass:
 
         # preprocess the data
         self.preprocess_data()
+
+        # train the model
+        self.train_model()
 
     # Load the houses data
     def load_houses_data_pandas(self):
@@ -95,6 +100,23 @@ class ImmoClass:
 
         # Apply transformations to the data
         self.houses_data = preprocessor.fit_transform(self.houses_data)
+
+    def train_model(self):
+        # Split the data into training and testing sets
+        X = self.houses_data.drop("price", axis=1)
+        y = self.houses_data["price"]
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, test_size=0.2, random_state=42
+        )
+
+        # Define the model
+        model = LinearRegression()
+
+        # Train the model
+        model.fit(X_train, y_train)
+
+        # Save the trained model
+        self.model = model
 
     def streamlit_app(self):
         st.set_page_config(page_title="Belgium Real Estate Analysis", layout="wide")
