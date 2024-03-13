@@ -1,8 +1,5 @@
 import streamlit as st
-import geopandas as gpd
-import pandas as pd
 import os
-import json
 from plotly import express as px
 from plotly import graph_objs as go
 import pandas as pd
@@ -12,6 +9,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.impute import SimpleImputer
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
 
 
 class ImmoClass:
@@ -117,6 +115,17 @@ class ImmoClass:
 
         # Save the trained model
         self.model = model
+
+        # Predict on the test set
+        y_pred = model.predict(X_test)
+
+        # Calculate and print the R^2 score
+        r2 = r2_score(y_test, y_pred)
+        print(f"R^2 score: {r2}")
+
+        # Calculate and print the mean squared error
+        mse = mean_squared_error(y_test, y_pred)
+        print(f"Mean squared error: {mse}")
 
     def streamlit_app(self):
         st.set_page_config(page_title="Belgium Real Estate Analysis", layout="wide")
