@@ -15,6 +15,8 @@ from sklearn.metrics import mean_squared_error, r2_score
 class ImmoClass:
     def __init__(self):
         self.houses_data = None
+        self.model = None
+        self.preprocessor = None
 
         # load the data
         self.load_houses_data_pandas()
@@ -22,11 +24,20 @@ class ImmoClass:
         # clean the data
         self.clean_data()
 
+        # Split the data into training and testing sets
+        X = self.houses_data.drop("price", axis=1)
+        y = self.houses_data["price"]
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, test_size=0.2, random_state=42
+        )
+
         # preprocess the data
-        self.preprocess_data()
+        self.preprocessor = self.create_preprocessor(X_train)
+        X_train = self.preprocess_data(X_train)
+        X_test = self.preprocess_data(X_test)
 
         # train the model
-        self.train_model()
+        self.train_model(X_train, X_test, y_train, y_test)
 
     # Load the houses data
     def load_houses_data_pandas(self):
@@ -36,6 +47,8 @@ class ImmoClass:
         self.houses_data = pd.read_csv(file_path)
 
     def clean_data(self):
+        # Strip leading and trailing spaces from column names and make them lower case
+        self.houses_data.columns = self.houses_data.columns.str.strip().str.lower()
         # Convert data types
         cols_to_convert = [
             "latitude",
@@ -65,11 +78,9 @@ class ImmoClass:
         # Remove duplicates
         self.houses_data.drop_duplicates(inplace=True)
 
-    def preprocess_data(self):
+    def create_preprocessor(self, data):
         # Define preprocessing for numeric columns (scale them)
-        numeric_features = self.houses_data.select_dtypes(
-            include=["int64", "float64"]
-        ).columns
+        numeric_features = data.select_dtypes(include=["int64", "float64"]).columns
         numeric_transformer = Pipeline(
             steps=[
                 ("imputer", SimpleImputer(strategy="mean")),
@@ -78,9 +89,7 @@ class ImmoClass:
         )
 
         # Define preprocessing for categorical features (one-hot encode them)
-        categorical_features = self.houses_data.select_dtypes(
-            include=["object"]
-        ).columns
+        categorical_features = data.select_dtypes(include=["object"]).columns
         categorical_transformer = Pipeline(
             steps=[
                 ("imputer", SimpleImputer(strategy="constant", fill_value="MISSING")),
@@ -96,17 +105,16 @@ class ImmoClass:
             ]
         )
 
+        # Fit the preprocessor on the data
+        preprocessor.fit(data)
+
+        return preprocessor
+
+    def preprocess_data(self, data):
         # Apply transformations to the data
-        self.houses_data = preprocessor.fit_transform(self.houses_data)
+        return self.preprocessor.transform(data)
 
-    def train_model(self):
-        # Split the data into training and testing sets
-        X = self.houses_data.drop("price", axis=1)
-        y = self.houses_data["price"]
-        X_train, X_test, y_train, y_test = train_test_split(
-            X, y, test_size=0.2, random_state=42
-        )
-
+    def train_model(self, X_train, X_test, y_train, y_test):
         # Define the model
         model = LinearRegression()
 
@@ -115,6 +123,10 @@ class ImmoClass:
 
         # Save the trained model
         self.model = model
+
+        # Print the model's coefficients and intercept
+        print(f"Model coefficients: {model.coef_}")
+        print(f"Model intercept: {model.intercept_}")
 
         # Predict on the test set
         y_pred = model.predict(X_test)
@@ -134,20 +146,3 @@ class ImmoClass:
         st.markdown(
             "This is a simple web app that shows the average price of houses per municipality in Belgium"
         )
-
-        # calculate average price
-        if self.avg_price is None:
-            self.avg_price = self.calculate_average_price("city", "price")
-
-        # # plot the average price of houses per municipality
-        st.subheader("Average price of houses per municipality")
-        self.plot_most_expensive_houses_average()
-        self.plot_most_expensive_houses_average_static()
-
-        # plot the count of houses per municipality
-        st.subheader("Count of houses per municipality")
-        self.plot_count_houses()
-
-        # plot the count of houses per province
-        st.subheader("Count of houses per province")
-        self.plot_count_houses_per_province()
