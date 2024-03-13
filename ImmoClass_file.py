@@ -5,6 +5,11 @@ import os
 import json
 from plotly import express as px
 from plotly import graph_objs as go
+import pandas as pd
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.compose import ColumnTransformer
+from sklearn.pipeline import Pipeline
+from sklearn.impute import SimpleImputer
 
 
 class ImmoClass:
@@ -16,6 +21,9 @@ class ImmoClass:
 
         # clean the data
         self.clean_data()
+
+        # preprocess the data
+        self.preprocess_data()
 
     # Load the houses data
     def load_houses_data_pandas(self):
@@ -53,6 +61,40 @@ class ImmoClass:
 
         # Remove duplicates
         self.houses_data.drop_duplicates(inplace=True)
+
+    def preprocess_data(self):
+        # Define preprocessing for numeric columns (scale them)
+        numeric_features = self.houses_data.select_dtypes(
+            include=["int64", "float64"]
+        ).columns
+        numeric_transformer = Pipeline(
+            steps=[
+                ("imputer", SimpleImputer(strategy="mean")),
+                ("scaler", StandardScaler()),
+            ]
+        )
+
+        # Define preprocessing for categorical features (one-hot encode them)
+        categorical_features = self.houses_data.select_dtypes(
+            include=["object"]
+        ).columns
+        categorical_transformer = Pipeline(
+            steps=[
+                ("imputer", SimpleImputer(strategy="constant", fill_value="MISSING")),
+                ("onehot", OneHotEncoder(handle_unknown="ignore")),
+            ]
+        )
+
+        # Combine preprocessing steps
+        preprocessor = ColumnTransformer(
+            transformers=[
+                ("num", numeric_transformer, numeric_features),
+                ("cat", categorical_transformer, categorical_features),
+            ]
+        )
+
+        # Apply transformations to the data
+        self.houses_data = preprocessor.fit_transform(self.houses_data)
 
     def streamlit_app(self):
         st.set_page_config(page_title="Belgium Real Estate Analysis", layout="wide")
