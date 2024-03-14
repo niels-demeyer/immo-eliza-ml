@@ -36,7 +36,7 @@ class ImmoClass:
         # X_test = self.preprocess_data(X_test)
 
         # # train the model
-        # self.train_model(X_train, X_test, y_train, y_test)
+        # self.train_model_linear(X_train, X_test, y_train, y_test)
 
     # Load the houses data
     def load_houses_data_pandas(self):
@@ -71,8 +71,8 @@ class ImmoClass:
         )
 
         # Handle missing values
-
-        # self.houses_data.fillna(self.houses_data.mean(), inplace=True)
+        #drop rows with missing price
+        self.houses_data.dropna(subset=["price"], inplace=True)
 
         # Remove duplicates
         self.houses_data.drop_duplicates(inplace=True)
@@ -121,7 +121,7 @@ class ImmoClass:
         # Apply transformations to the data
         return self.preprocessor.transform(data)
 
-    def train_model(self, X_train, X_test, y_train, y_test):
+    def train_model_linear(self, X_train, X_test, y_train, y_test):
         # Define the model
         model = LinearRegression()
 
