@@ -15,6 +15,10 @@ from sklearn.metrics import mean_squared_error, r2_score
 class ImmoClass:
     def __init__(self):
         self.houses_data = None
+        self.X_train = None
+        self.X_test = None
+        self.y_train = None
+        self.y_test = None
         self.model = None
         self.preprocessor = None
 
@@ -23,21 +27,16 @@ class ImmoClass:
 
         # clean the data
         self.clean_data()
+        
+        self.split_data()
 
-        # Split the data into training and testing sets
-        X = self.houses_data.drop("price", axis=1)
-        y = self.houses_data["price"]
-        X_train, X_test, y_train, y_test = train_test_split(
-            X, y, test_size=0.2, random_state=42
-        )
+        # # preprocess the data
+        # self.preprocessor = self.create_preprocessor(X_train)
+        # X_train = self.preprocess_data(X_train)
+        # X_test = self.preprocess_data(X_test)
 
-        # preprocess the data
-        self.preprocessor = self.create_preprocessor(X_train)
-        X_train = self.preprocess_data(X_train)
-        X_test = self.preprocess_data(X_test)
-
-        # train the model
-        self.train_model(X_train, X_test, y_train, y_test)
+        # # train the model
+        # self.train_model(X_train, X_test, y_train, y_test)
 
     # Load the houses data
     def load_houses_data_pandas(self):
@@ -78,6 +77,14 @@ class ImmoClass:
         # Remove duplicates
         self.houses_data.drop_duplicates(inplace=True)
 
+    def split_data(self):
+        # Split the data into training and testing sets
+        X = self.houses_data.drop("price", axis=1)
+        y = self.houses_data["price"]
+        self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(
+            X, y, test_size=0.2, random_state=42
+        )
+        
     def create_preprocessor(self, data):
         # Define preprocessing for numeric columns (scale them)
         numeric_features = data.select_dtypes(include=["int64", "float64"]).columns
