@@ -70,7 +70,7 @@ class ImmoClass:
         )
 
     def create_preprocessor(self, X):
-        numeric_features = X.select_dtypes(include=["int64", "float64"]).columns
+        numeric_features = X.select_dtypes(include=["int64", "cfloat"]).columns
         numeric_transformer = Pipeline(
             steps=[
                 ("imputer", SimpleImputer(strategy="median")),
