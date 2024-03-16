@@ -1,7 +1,8 @@
 from ImmoClass_file import ImmoClass
 
-# Create an instance of the StreamLitClass and load the data
-immo = ImmoClass()
+if __name__ == "__main__":
+    # Create an instance of ImmoClass
+    immo = ImmoClass()
 
-print(immo.houses_data.head())
-print(immo.houses_data.info())
+    # Use the model to make predictions on the test data
+    predictions = immo.check_performance()

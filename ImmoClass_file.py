@@ -103,3 +103,14 @@ class ImmoClass:
 
     def predict(self, X):
         return self.model.predict(X)
+
+    def check_performance(self):
+        # Use the model to make predictions on the test data
+        predictions = self.predict(self.X_test)
+
+        # Calculate and print the mean squared error and the r2 score
+        mse = mean_squared_error(self.y_test, predictions)
+        r2 = r2_score(self.y_test, predictions)
+
+        print(f"Mean Squared Error: {mse}")
+        print(f"R2 Score: {r2}")
