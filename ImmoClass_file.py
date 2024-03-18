@@ -30,8 +30,6 @@ class ImmoClass:
         
         # split the data
         self.split_data()
-        
-        self.create_preprocessor()
 
     # Load the houses data
     def load_houses_data_pandas(self):
@@ -43,27 +41,6 @@ class ImmoClass:
     def clean_data(self):
         # Strip leading and trailing spaces from column names and make them lower case
         self.houses_data.columns = self.houses_data.columns.str.strip().str.lower()
-        # Convert data types
-        cols_to_convert = [
-            "latitude",
-            "longitude",
-            "construction_year",
-            "total_area_sqm",
-            "surface_land_sqm",
-            "terrace_sqm",
-            "garden_sqm",
-            "primary_energy_consumption_sqm",
-            "cadastral_income",
-        ]
-        cols_to_convert = [
-            col for col in cols_to_convert if col in self.houses_data.columns
-        ]
-        self.houses_data[cols_to_convert] = self.houses_data[cols_to_convert].apply(
-            pd.to_numeric, errors="coerce"
-        )
-        self.houses_data[cols_to_convert] = self.houses_data[cols_to_convert].apply(
-            pd.to_numeric, errors="coerce"
-        )
 
         # Handle missing values
         #drop rows with missing price
@@ -81,17 +58,24 @@ class ImmoClass:
         )
         
     def knn_neighbors(self, n_neighbors):
+        # Create the preprocessor
+        self.create_preprocessor()
+
+        # Preprocess the training and testing data
+        X_train_preprocessed = self.preprocessor.transform(self.X_train)
+        X_test_preprocessed = self.preprocessor.transform(self.X_test)
+        
         # Define the model
         model = KNeighborsRegressor(n_neighbors=n_neighbors)
 
         # Train the model
-        model.fit(self.X_train, self.y_train)
+        model.fit(X_train_preprocessed, self.y_train)
 
         # Save the trained model
         self.model_knn = model
 
         # Predict on the test set
-        y_pred = model.predict(self.X_test)
+        y_pred = model.predict(X_test_preprocessed)
 
         # Calculate and print the R^2 score
         r2 = r2_score(self.y_test, y_pred)
@@ -137,21 +121,28 @@ class ImmoClass:
         return self.preprocessor.transform(data)
 
     def train_model_linear(self):
+        # Create the preprocessor
+        self.create_preprocessor()
+
+        # Preprocess the training and testing data
+        X_train_preprocessed = self.preprocessor.transform(self.X_train)
+        X_test_preprocessed = self.preprocessor.transform(self.X_test)
+
         # Define the model
         model = LinearRegression()
 
         # Train the model
-        model.fit(self.X_train, self.y_train)
+        model.fit(X_train_preprocessed, self.y_train)
 
         # Save the trained model
-        self.model = model
+        self.model_linear = model
 
         # Print the model's coefficients and intercept
         print(f"Model coefficients for Linear Regression: {model.coef_}")
         print(f"Model intercept for Linear Regression: {model.intercept_}")
 
         # Predict on the test set
-        y_pred = model.predict(self.X_test)
+        y_pred = model.predict(X_test_preprocessed)
 
         # Calculate and print the R^2 score
         r2 = r2_score(self.y_test, y_pred)
