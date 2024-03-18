@@ -10,7 +10,7 @@ from sklearn.impute import SimpleImputer
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, r2_score
-
+from sklearn.neighbors import KNeighborsRegressor
 
 class ImmoClass:
     def __init__(self):
@@ -30,13 +30,12 @@ class ImmoClass:
         
         self.split_data()
 
-        # # preprocess the data
-        # self.preprocessor = self.create_preprocessor(X_train)
-        # X_train = self.preprocess_data(X_train)
-        # X_test = self.preprocess_data(X_test)
+        # preprocess the data
+        self.preprocessor = self.create_preprocessor(X_train)
+        self.X_train = self.preprocess_data(X_train)
+        self.X_test = self.preprocess_data(sX_test)
 
-        # # train the model
-        # self.train_model_linear(X_train, X_test, y_train, y_test)
+        
 
     # Load the houses data
     def load_houses_data_pandas(self):
@@ -84,6 +83,27 @@ class ImmoClass:
         self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(
             X, y, test_size=0.2, random_state=42
         )
+        
+    def knn_neighbors(self, n_neighbors):
+        # Define the model
+        model = KNeighborsRegressor(n_neighbors=n_neighbors)
+
+        # Train the model
+        model.fit(self.X_train, self.y_train)
+
+        # Save the trained model
+        self.model = model
+
+        # Predict on the test set
+        y_pred = model.predict(self.X_test)
+
+        # Calculate and print the R^2 score
+        r2 = r2_score(self.y_test, y_pred)
+        print(f"R^2 score: {r2}")
+
+        # Calculate and print the mean squared error
+        mse = mean_squared_error(self.y_test, y_pred)
+        print(f"Mean squared error: {mse}")
         
     def create_preprocessor(self, data):
         # Define preprocessing for numeric columns (scale them)
