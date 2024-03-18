@@ -28,10 +28,10 @@ class ImmoClass:
         # clean the data
         self.clean_data()
         
+        # split the data
         self.split_data()
         
-
-        
+        self.create_preprocessor()
 
     # Load the houses data
     def load_houses_data_pandas(self):
@@ -101,9 +101,9 @@ class ImmoClass:
         mse = mean_squared_error(self.y_test, y_pred)
         print(f"Mean squared error: {mse}")
         
-    def create_preprocessor(self, data):
+    def create_preprocessor(self):
         # Define preprocessing for numeric columns (scale them)
-        numeric_features = data.select_dtypes(include=["int64", "float64"]).columns
+        numeric_features = self.X_train.select_dtypes(include=["int64", "float64"]).columns
         numeric_transformer = Pipeline(
             steps=[
                 ("imputer", SimpleImputer(strategy="mean")),
@@ -112,7 +112,7 @@ class ImmoClass:
         )
 
         # Define preprocessing for categorical features (one-hot encode them)
-        categorical_features = data.select_dtypes(include=["object"]).columns
+        categorical_features = self.X_train.select_dtypes(include=["object"]).columns
         categorical_transformer = Pipeline(
             steps=[
                 ("imputer", SimpleImputer(strategy="constant", fill_value="MISSING")),
@@ -121,17 +121,16 @@ class ImmoClass:
         )
 
         # Combine preprocessing steps
-        preprocessor = ColumnTransformer(
+        self.preprocessor = ColumnTransformer(
             transformers=[
                 ("num", numeric_transformer, numeric_features),
                 ("cat", categorical_transformer, categorical_features),
             ]
         )
 
-        # Fit the preprocessor on the data
-        preprocessor.fit(data)
+        # Fit the preprocessor on the training data
+        self.preprocessor.fit(self.X_train)
 
-        return preprocessor
 
     def preprocess_data(self, data):
         # Apply transformations to the data
