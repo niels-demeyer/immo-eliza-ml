@@ -19,8 +19,8 @@ class ImmoClass:
         self.X_test = None
         self.y_train = None
         self.y_test = None
-        self.model = None
-        self.preprocessor = None
+        self.model_linear = None
+        self.model_knn = None
 
         # load the data
         self.load_houses_data_pandas()
@@ -29,11 +29,7 @@ class ImmoClass:
         self.clean_data()
         
         self.split_data()
-
-        # preprocess the data
-        self.preprocessor = self.create_preprocessor(X_train)
-        self.X_train = self.preprocess_data(X_train)
-        self.X_test = self.preprocess_data(sX_test)
+        
 
         
 
@@ -92,7 +88,7 @@ class ImmoClass:
         model.fit(self.X_train, self.y_train)
 
         # Save the trained model
-        self.model = model
+        self.model_knn = model
 
         # Predict on the test set
         y_pred = model.predict(self.X_test)
@@ -141,30 +137,30 @@ class ImmoClass:
         # Apply transformations to the data
         return self.preprocessor.transform(data)
 
-    def train_model_linear(self, X_train, X_test, y_train, y_test):
+    def train_model_linear(self):
         # Define the model
         model = LinearRegression()
 
         # Train the model
-        model.fit(X_train, y_train)
+        model.fit(self.X_train, self.y_train)
 
         # Save the trained model
         self.model = model
 
         # Print the model's coefficients and intercept
-        print(f"Model coefficients: {model.coef_}")
-        print(f"Model intercept: {model.intercept_}")
+        print(f"Model coefficients for Linear Regression: {model.coef_}")
+        print(f"Model intercept for Linear Regression: {model.intercept_}")
 
         # Predict on the test set
-        y_pred = model.predict(X_test)
+        y_pred = model.predict(self.X_test)
 
         # Calculate and print the R^2 score
-        r2 = r2_score(y_test, y_pred)
-        print(f"R^2 score: {r2}")
+        r2 = r2_score(self.y_test, y_pred)
+        print(f"R^2 score for Linear Regression: {r2}")
 
         # Calculate and print the mean squared error
-        mse = mean_squared_error(y_test, y_pred)
-        print(f"Mean squared error: {mse}")
+        mse = mean_squared_error(self.y_test, y_pred)
+        print(f"Mean squared error for Linear Regression: {mse}")
 
     def streamlit_app(self):
         st.set_page_config(page_title="Belgium Real Estate Analysis", layout="wide")
