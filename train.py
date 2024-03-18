@@ -1,4 +1,4 @@
-from ImmoClass_file import ImmoClass
+from ImmoClass_file_2 import ImmoClass
 
 if __name__ == "__main__":
     # Create an instance of ImmoClass
