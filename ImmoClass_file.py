@@ -68,6 +68,9 @@ class ImmoClass:
             # Remove rows with missing values in the following columns
             self.data = self.data.dropna(subset=["surface_land_sqm"])
 
+        # Remove the longitudes and latitudes
+        self.data = self.data.drop(columns=["longitude", "latitude"])
+
     def describe_data(self):
         # Display the first few rows of the dataset
         print(self.data.head())
@@ -103,7 +106,7 @@ class ImmoClass:
 
         numeric_transformer = Pipeline(
             steps=[
-                ("imputer", SimpleImputer(strategy="mean")),
+                ("imputer", SimpleImputer(strategy="median")),
                 ("scaler", StandardScaler()),
             ]
         )
