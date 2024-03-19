@@ -14,9 +14,9 @@ from sklearn.neighbors import KNeighborsRegressor
 
 
 class ImmoClass:
-    def __init__(self):
-        self.houses_data = None
-        self.appartments_data = None
+    def __init__(self, property_type):
+        self.property_type = property_type
+        self.data = None
         self.X_train = None
         self.X_test = None
         self.y_train = None
@@ -25,7 +25,7 @@ class ImmoClass:
         self.model_knn = None
 
         # load the data
-        self.load_houses_data_pandas()
+        self.load_data_pandas()
 
         # clean the data
         self.clean_data()
@@ -36,8 +36,8 @@ class ImmoClass:
         # apply the preprocessor
         self.apply_preprocessor()
 
-    # Load the houses data
-    def load_houses_data_pandas(self):
+    # Load the data
+    def load_data_pandas(self):
         script_dir = os.path.dirname(__file__)
         rel_path = r"data\raw\properties.csv"
         file_path = os.path.join(script_dir, rel_path)
@@ -46,49 +46,32 @@ class ImmoClass:
         chunks = []
 
         for chunk in pd.read_csv(file_path, chunksize=chunksize):
-            chunks.append(chunk[chunk["property_type"] == "HOUSE"])
+            chunks.append(chunk[chunk["property_type"] == self.property_type])
 
-        self.houses_data = pd.concat(chunks, ignore_index=True)
-
-    def load_appartments_data_pandas(self):
-        script_dir = os.path.dirname(__file__)
-        rel_path = r"data\raw\properties.csv"
-        file_path = os.path.join(script_dir, rel_path)
-
-        chunksize = 50000  # you can adjust this value depending on your memory capacity
-        chunks = []
-
-        for chunk in pd.read_csv(file_path, chunksize=chunksize):
-            chunks.append(chunk[chunk["property_type"] == "APARTMENT"])
-
-        self.appartments_data = pd.concat(chunks, ignore_index=True)
+        self.data = pd.concat(chunks, ignore_index=True)
 
     def clean_data(self):
         # Remove all spaces from column names and make them lower case
-        self.houses_data.columns = self.houses_data.columns.str.replace(
-            " ", ""
-        ).str.lower()
+        self.data.columns = self.data.columns.str.replace(" ", "").str.lower()
 
         # Handle missing values
         # drop rows with missing price
-        self.houses_data.dropna(subset=["price"], inplace=True)
+        self.data.dropna(subset=["price"], inplace=True)
 
         # Remove duplicates
-        self.houses_data.drop_duplicates(inplace=True)
+        self.data.drop_duplicates(inplace=True)
 
     def split_data(self):
         # Split the data into training and testing sets
-        X = self.houses_data.drop("price", axis=1)
-        y = self.houses_data["price"]
+        X = self.data.drop("price", axis=1)
+        y = self.data["price"]
         self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(
             X, y, test_size=0.2, random_state=42
         )
 
     def create_preprocessor(self):
         # Define preprocessing for numeric columns (scale them)
-        numeric_features = self.houses_data.select_dtypes(
-            include=["int64", "float64"]
-        ).columns
+        numeric_features = self.data.select_dtypes(include=["int64", "float64"]).columns
         numeric_features = numeric_features.drop(
             "price"
         )  # Exclude 'price' from numeric features
@@ -101,21 +84,11 @@ class ImmoClass:
         )
 
         # Define preprocessing for categorical features (one-hot encode them)
-        categorical_features = self.houses_data.select_dtypes(
-            include=["object"]
-        ).columns
+        categorical_features = self.data.select_dtypes(include=["object"]).columns
         categorical_transformer = Pipeline(
             steps=[
                 ("imputer", SimpleImputer(strategy="constant", fill_value="MISSING")),
                 ("onehot", OneHotEncoder(handle_unknown="ignore")),
-            ]
-        )
-
-        # Combine preprocessing steps
-        self.preprocessor = ColumnTransformer(
-            transformers=[
-                ("num", numeric_transformer, numeric_features),
-                ("cat", categorical_transformer, categorical_features),
             ]
         )
 
