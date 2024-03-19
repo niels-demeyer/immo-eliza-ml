@@ -21,6 +21,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.neighbors import KNeighborsRegressor
+from sklearn.ensemble import RandomForestRegressor
 
 
 class ImmoClass:
@@ -32,6 +33,7 @@ class ImmoClass:
         self.y_train = None
         self.y_test = None
         self.model_linear = None
+        self.model_random_forest = None
         self.model_knn = None
 
         # load the data
@@ -223,6 +225,27 @@ class ImmoClass:
         # Calculate and print the mean squared error
         mse = mean_squared_error(self.y_test, y_pred)
         print(f"Mean squared error for Linear Regression: {mse}")
+
+    def train_model_random_forest(self):
+        # Define the model
+        model = RandomForestRegressor(n_estimators=100, random_state=42)
+
+        # Train the model
+        model.fit(self.X_train, self.y_train)
+
+        # Save the trained model
+        self.model_random_forest = model
+
+        # Predict on the test set
+        y_pred = model.predict(self.X_test)
+
+        # Calculate and print the R^2 score
+        r2 = r2_score(self.y_test, y_pred)
+        print(f"R^2 score for Random Forest: {r2}")
+
+        # Calculate and print the mean squared error
+        mse = mean_squared_error(self.y_test, y_pred)
+        print(f"Mean squared error for Random Forest: {mse}")
 
     def streamlit_app(self):
         st.set_page_config(page_title="Belgium Real Estate Analysis", layout="wide")
