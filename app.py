@@ -1,4 +1,4 @@
-from ImmoClass_file_2 import ImmoClass
+from ImmoClass_file import ImmoClass
 
 # Create an instance of the StreamLitClass and load the data
 streamlit_app = ImmoClass()
