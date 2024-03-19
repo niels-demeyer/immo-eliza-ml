@@ -228,7 +228,9 @@ class ImmoClass:
 
     def train_model_random_forest(self):
         # Define the model
-        model = RandomForestRegressor(n_estimators=100, random_state=42)
+        model = RandomForestRegressor(
+            n_estimators=50, random_state=42, n_jobs=-1, max_depth=10
+        )
 
         # Train the model
         model.fit(self.X_train, self.y_train)
