@@ -108,10 +108,10 @@ class ImmoClass:
     def create_preprocessor(self):
         # Define preprocessing for numeric columns (scale them)
         numeric_features = self.data.select_dtypes(include=["int64", "float64"]).columns
-        # print(f"Numeric features: {len(numeric_features)}")
-        # print(
-        #     f"The columns of the numeric features for {self.property_type} are: {numeric_features}"
-        # )
+        print(f"Numeric features: {len(numeric_features)}")
+        print(
+            f"The columns of the numeric features for {self.property_type} are: {numeric_features}"
+        )
         numeric_features = numeric_features.drop(
             "price"
         )  # Exclude 'price' from numeric features
@@ -125,10 +125,10 @@ class ImmoClass:
 
         # Define preprocessing for categorical features (one-hot encode them)
         categorical_features = self.data.select_dtypes(include=["object"]).columns
-        # print(
-        #     f"Categorical features for {self.property_type}: {len(categorical_features)}"
-        # )
-        # print(f"The columns of the categorical features are: {categorical_features}")
+        print(
+            f"Categorical features for {self.property_type}: {len(categorical_features)}"
+        )
+        print(f"The columns of the categorical features are: {categorical_features}")
         categorical_transformer = Pipeline(
             steps=[
                 ("imputer", SimpleImputer(strategy="constant", fill_value="MISSING")),
