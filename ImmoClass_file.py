@@ -29,9 +29,6 @@ class ImmoClass:
         # clean the data
         self.clean_data()
 
-        print(type(self.houses_data))
-        print(self.houses_data.columns)
-
         # # split the data
         self.split_data()
 
