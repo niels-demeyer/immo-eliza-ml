@@ -99,34 +99,44 @@ class ImmoClass:
             X, y, test_size=0.2, random_state=42
         )
 
-    def create_preprocessor(df):
-        # Identify numerical and categorical columns
-        numeric_features = df.select_dtypes(include=["int64", "float64"]).columns
-        categorical_features = df.select_dtypes(include=["object"]).columns
+    def create_preprocessor(self):
+        # Define preprocessing for numeric columns (scale them)
+        numeric_features = self.data.select_dtypes(include=["int64", "float64"]).columns
+        numeric_features = numeric_features.drop(
+            "price"
+        )  # Exclude 'price' from numeric features
 
-        # Create preprocessors
         numeric_transformer = Pipeline(
             steps=[
-                ("imputer", SimpleImputer(strategy="median")),
+                ("imputer", SimpleImputer(strategy="mean")),
                 ("scaler", StandardScaler()),
             ]
         )
 
+        # Define preprocessing for categorical features (one-hot encode them)
+        categorical_features = self.data.select_dtypes(include=["object"]).columns
         categorical_transformer = Pipeline(
             steps=[
-                ("imputer", SimpleImputer(strategy="constant", fill_value="missing")),
+                ("imputer", SimpleImputer(strategy="constant", fill_value="MISSING")),
                 ("onehot", OneHotEncoder(handle_unknown="ignore")),
             ]
         )
 
-        preprocessor = ColumnTransformer(
+        # Combine preprocessing steps
+        self.preprocessor = ColumnTransformer(
             transformers=[
                 ("num", numeric_transformer, numeric_features),
                 ("cat", categorical_transformer, categorical_features),
             ]
         )
 
-        return preprocessor
+        # Combine preprocessing steps
+        self.preprocessor = ColumnTransformer(
+            transformers=[
+                ("num", numeric_transformer, numeric_features),
+                ("cat", categorical_transformer, categorical_features),
+            ]
+        )
 
     def apply_preprocessor(self):
         # Create the preprocessor
