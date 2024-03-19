@@ -61,6 +61,9 @@ class ImmoClass:
         # Remove duplicates
         self.data = self.data.drop_duplicates()
 
+        # Remove the ID column
+        self.data = self.data.drop(columns=["id"])id
+
         if self.property_type == "APARTMENT":
             # Remove rows with missing values in the following columns
             self.data = self.data.drop(columns=["surface_land_sqm"])
