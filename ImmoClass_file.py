@@ -118,24 +118,17 @@ class ImmoClass:
         self.X_test = self.preprocessor.transform(self.X_test)
 
     def knn_neighbors(self, n_neighbors):
-        # Create the preprocessor
-        self.create_preprocessor()
-
-        # Preprocess the training and testing data
-        X_train_preprocessed = self.preprocessor.transform(self.X_train)
-        X_test_preprocessed = self.preprocessor.transform(self.X_test)
-
         # Define the model
         model = KNeighborsRegressor(n_neighbors=n_neighbors)
 
         # Train the model
-        model.fit(X_train_preprocessed, self.y_train)
+        model.fit(self.X_train, self.y_train)
 
         # Save the trained model
         self.model_knn = model
 
         # Predict on the test set
-        y_pred = model.predict(X_test_preprocessed)
+        y_pred = model.predict(self.X_test)
 
         # Calculate and print the R^2 score
         r2 = r2_score(self.y_test, y_pred)
