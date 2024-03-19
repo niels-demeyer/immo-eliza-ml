@@ -29,8 +29,14 @@ class ImmoClass:
         # clean the data
         self.clean_data()
 
-        # split the data
+        print(type(self.houses_data))
+        print(self.houses_data.columns)
+
+        # # split the data
         self.split_data()
+
+        # # apply the preprocessor
+        self.apply_preprocessor()
 
     # Load the houses data
     def load_houses_data_pandas(self):
@@ -40,8 +46,10 @@ class ImmoClass:
         self.houses_data = pd.read_csv(file_path)
 
     def clean_data(self):
-        # Strip leading and trailing spaces from column names and make them lower case
-        self.houses_data.columns = self.houses_data.columns.str.strip().str.lower()
+        # Remove all spaces from column names and make them lower case
+        self.houses_data.columns = self.houses_data.columns.str.replace(
+            " ", ""
+        ).str.lower()
 
         # Handle missing values
         # drop rows with missing price
@@ -63,6 +71,10 @@ class ImmoClass:
         numeric_features = self.houses_data.select_dtypes(
             include=["int64", "float64"]
         ).columns
+        numeric_features = numeric_features.drop(
+            "price"
+        )  # Exclude 'price' from numeric features
+
         numeric_transformer = Pipeline(
             steps=[
                 ("imputer", SimpleImputer(strategy="mean")),
@@ -89,13 +101,21 @@ class ImmoClass:
             ]
         )
 
+        # Combine preprocessing steps
+        self.preprocessor = ColumnTransformer(
+            transformers=[
+                ("num", numeric_transformer, numeric_features),
+                ("cat", categorical_transformer, categorical_features),
+            ]
+        )
+
     def apply_preprocessor(self):
         # Create the preprocessor
         self.create_preprocessor()
 
         # Preprocess the training and testing data
-        X_train_preprocessed = self.preprocessor.fit_transform(self.X_train)
-        X_test_preprocessed = self.preprocessor.transform(self.X_test)
+        self.X_train = self.preprocessor.fit_transform(self.X_train)
+        self.X_test = self.preprocessor.transform(self.X_test)
 
     def knn_neighbors(self, n_neighbors):
         # Create the preprocessor
@@ -126,18 +146,11 @@ class ImmoClass:
         print(f"Mean squared error: {mse}")
 
     def train_model_linear(self):
-        # Create the preprocessor
-        self.create_preprocessor()
-
-        # Preprocess the training and testing data
-        X_train_preprocessed = self.preprocessor.transform(self.X_train)
-        X_test_preprocessed = self.preprocessor.transform(self.X_test)
-
         # Define the model
         model = LinearRegression()
 
         # Train the model
-        model.fit(X_train_preprocessed, self.y_train)
+        model.fit(self.X_train, self.y_train)
 
         # Save the trained model
         self.model_linear = model
@@ -147,7 +160,7 @@ class ImmoClass:
         print(f"Model intercept for Linear Regression: {model.intercept_}")
 
         # Predict on the test set
-        y_pred = model.predict(X_test_preprocessed)
+        y_pred = model.predict(self.X_test)
 
         # Calculate and print the R^2 score
         r2 = r2_score(self.y_test, y_pred)
