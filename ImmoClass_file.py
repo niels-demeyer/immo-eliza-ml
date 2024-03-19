@@ -89,9 +89,13 @@ class ImmoClass:
             ]
         )
 
-    def preprocess_data(self, data):
-        # Apply transformations to the data
-        return self.preprocessor.transform(data)
+    def apply_preprocessor(self):
+        # Create the preprocessor
+        self.create_preprocessor()
+
+        # Preprocess the training and testing data
+        X_train_preprocessed = self.preprocessor.fit_transform(self.X_train)
+        X_test_preprocessed = self.preprocessor.transform(self.X_test)
 
     def knn_neighbors(self, n_neighbors):
         # Create the preprocessor
