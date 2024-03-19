@@ -62,7 +62,7 @@ class ImmoClass:
         self.data = self.data.drop_duplicates()
 
         # Remove the ID column
-        self.data = self.data.drop(columns=["id"])id
+        self.data = self.data.drop(columns=["id"])
 
         if self.property_type == "APARTMENT":
             # Remove rows with missing values in the following columns
@@ -70,6 +70,9 @@ class ImmoClass:
 
         # Remove the longitudes and latitudes
         self.data = self.data.drop(columns=["longitude", "latitude"])
+
+        # Remove the construction year
+        self.data = self.data.drop(columns=["construction_year"])
 
     def describe_data(self):
         # Display the first few rows of the dataset
@@ -98,6 +101,8 @@ class ImmoClass:
         )
 
     def create_preprocessor(self):
+        # # Drop the property_typer column
+        # self.X_train = self.X_train.drop(columns=["property_type"])
         # Define preprocessing for numeric columns (scale them)
         numeric_features = self.data.select_dtypes(include=["int64", "float64"]).columns
         print(f"Numeric features: {len(numeric_features)}")
