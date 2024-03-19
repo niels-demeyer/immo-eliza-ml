@@ -45,16 +45,7 @@ class ImmoClass:
         rel_path = r"data\raw\properties.csv"
         file_path = os.path.join(script_dir, rel_path)
         df = pd.read_csv(file_path)
-        if self.property_type == "HOUSE":
-            self.data = df[df["property_type"] == "HOUSE"]
-            print(f"We have {self.data.shape[0]} houses in the dataset")
-        elif self.property_type == "APARTMENT":
-            self.data = df[df["property_type"] == "APARTMENT"]
-            if (
-                "surface_land_sqm" in self.data.columns
-            ):  # remove the column if it exists because it is not relevant for apartments
-                self.data.drop(columns=["surface_land_sqm"], inplace=True)
-            print(f"We have {self.data.shape[0]} apartments in the dataset")
+        self.data = df
 
     def save_df(self):
         script_dir = os.path.dirname(__file__)
@@ -68,10 +59,14 @@ class ImmoClass:
 
         # Handle missing values
         # drop rows with missing price
-        self.data.dropna(subset=["price"], inplace=True)
+        self.data = self.data.dropna(subset=["price"])
 
         # Remove duplicates
-        self.data.drop_duplicates(inplace=True)
+        self.data = self.data.drop_duplicates()
+
+        if self.property_type == "APPARTMENT":
+            # Remove rows with missing values in the following columns
+            self.data = self.data.dropna(subset=["surface_land_sqm"])
 
     def describe_data(self):
         # Display the first few rows of the dataset
