@@ -30,6 +30,9 @@ class ImmoClass:
         # clean the data
         self.clean_data()
 
+        # describe the data
+        self.describe_data()
+
         # split the data
         self.split_data()
 
@@ -64,6 +67,24 @@ class ImmoClass:
         # Remove duplicates
         self.data.drop_duplicates(inplace=True)
 
+    def describe_data(self):
+        # Display the first few rows of the dataset
+        print(self.data.head())
+
+        # Display the shape of the dataset
+        print(
+            f"The dataset has {self.data.shape[0]} rows and {self.data.shape[1]} columns"
+        )
+
+        # Display the data types of the dataset
+        print(self.data.dtypes)
+
+        # Display the number of missing values for each column
+        print(self.data.isna().sum())
+
+        # Display the statistics of the dataset
+        print(self.data.describe())
+
     def split_data(self):
         # Split the data into training and testing sets
         X = self.data.drop("price", axis=1)
@@ -81,7 +102,7 @@ class ImmoClass:
 
         numeric_transformer = Pipeline(
             steps=[
-                ("imputer", SimpleImputer(strategy="mean")),
+                ("imputer", SimpleImputer(strategy="median")),
                 ("scaler", StandardScaler()),
             ]
         )
