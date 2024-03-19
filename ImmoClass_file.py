@@ -29,10 +29,10 @@ class ImmoClass:
         # clean the data
         self.clean_data()
 
-        # # split the data
+        # split the data
         self.split_data()
 
-        # # apply the preprocessor
+        # apply the preprocessor
         self.apply_preprocessor()
 
     # Load the houses data
