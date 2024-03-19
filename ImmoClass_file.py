@@ -54,9 +54,6 @@ class ImmoClass:
         self.data.to_csv(file_path, index=False)
 
     def clean_data(self):
-        # Remove all spaces from column names and make them lower case
-        self.data.columns = self.data.columns.str.replace(" ", "").str.lower()
-
         # Handle missing values
         # drop rows with missing price
         self.data = self.data.dropna(subset=["price"])
@@ -64,9 +61,9 @@ class ImmoClass:
         # Remove duplicates
         self.data = self.data.drop_duplicates()
 
-        if self.property_type == "APPARTMENT":
+        if self.property_type == "APARTMENT":
             # Remove rows with missing values in the following columns
-            self.data = self.data.dropna(subset=["surface_land_sqm"])
+            self.data = self.data.drop(columns=["surface_land_sqm"])
 
         # Remove the longitudes and latitudes
         self.data = self.data.drop(columns=["longitude", "latitude"])
