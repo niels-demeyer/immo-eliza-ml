@@ -30,8 +30,8 @@ class ImmoClass:
         # clean the data
         self.clean_data()
 
-        # describe the data
-        self.describe_data()
+        # # describe the data
+        # self.describe_data()
 
         # split the data
         self.split_data()
@@ -53,8 +53,14 @@ class ImmoClass:
             if (
                 "surface_land_sqm" in self.data.columns
             ):  # remove the column if it exists because it is not relevant for apartments
-                self.data = self.data.drop(columns=["surface_land_sqm"])
+                self.data.drop(columns=["surface_land_sqm"], inplace=True)
             print(f"We have {self.data.shape[0]} apartments in the dataset")
+
+    def save_df(self):
+        script_dir = os.path.dirname(__file__)
+        rel_path = r"data\raw\houses.csv"
+        file_path = os.path.join(script_dir, rel_path)
+        self.data.to_csv(file_path, index=False)
 
     def clean_data(self):
         # Remove all spaces from column names and make them lower case
@@ -93,13 +99,12 @@ class ImmoClass:
             X, y, test_size=0.2, random_state=42
         )
 
-    def create_preprocessor(self):
-        # Define preprocessing for numeric columns (scale them)
-        numeric_features = self.data.select_dtypes(include=["int64", "float64"]).columns
-        numeric_features = numeric_features.drop(
-            "price"
-        )  # Exclude 'price' from numeric features
+    def create_preprocessor(df):
+        # Identify numerical and categorical columns
+        numeric_features = df.select_dtypes(include=["int64", "float64"]).columns
+        categorical_features = df.select_dtypes(include=["object"]).columns
 
+        # Create preprocessors
         numeric_transformer = Pipeline(
             steps=[
                 ("imputer", SimpleImputer(strategy="median")),
@@ -107,22 +112,21 @@ class ImmoClass:
             ]
         )
 
-        # Define preprocessing for categorical features (one-hot encode them)
-        categorical_features = self.data.select_dtypes(include=["object"]).columns
         categorical_transformer = Pipeline(
             steps=[
-                ("imputer", SimpleImputer(strategy="constant", fill_value="MISSING")),
+                ("imputer", SimpleImputer(strategy="constant", fill_value="missing")),
                 ("onehot", OneHotEncoder(handle_unknown="ignore")),
             ]
         )
 
-        # Combine preprocessing steps
-        self.preprocessor = ColumnTransformer(
+        preprocessor = ColumnTransformer(
             transformers=[
                 ("num", numeric_transformer, numeric_features),
                 ("cat", categorical_transformer, categorical_features),
             ]
         )
+
+        return preprocessor
 
     def apply_preprocessor(self):
         # Create the preprocessor
