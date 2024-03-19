@@ -1,10 +1,20 @@
 import streamlit as st
 import os
+import numpy as np
 from plotly import express as px
 from plotly import graph_objs as go
 import pandas as pd
-from sklearn.preprocessing import StandardScaler, OneHotEncoder
-from sklearn.compose import ColumnTransformer
+from sklearn.preprocessing import (
+    StandardScaler,
+    OneHotEncoder,
+    OrdinalEncoder,
+    FunctionTransformer,
+)
+from sklearn.compose import (
+    ColumnTransformer,
+    make_column_transformer,
+    make_column_selector,
+)
 from sklearn.pipeline import Pipeline
 from sklearn.impute import SimpleImputer
 from sklearn.model_selection import train_test_split
@@ -108,10 +118,6 @@ class ImmoClass:
     def create_preprocessor(self):
         # Define preprocessing for numeric columns (scale them)
         numeric_features = self.data.select_dtypes(include=["int64", "float64"]).columns
-        print(f"Numeric features: {len(numeric_features)}")
-        print(
-            f"The columns of the numeric features for {self.property_type} are: {numeric_features}"
-        )
         numeric_features = numeric_features.drop(
             "price"
         )  # Exclude 'price' from numeric features
@@ -125,10 +131,21 @@ class ImmoClass:
 
         # Define preprocessing for categorical features (one-hot encode them)
         categorical_features = self.data.select_dtypes(include=["object"]).columns
-        print(
-            f"Categorical features for {self.property_type}: {len(categorical_features)}"
-        )
-        print(f"The columns of the categorical features are: {categorical_features}")
+        ordinal_columns = [
+            "fl_double_glazing",
+            "fl_swimming_pool",
+            "fl_garden",
+            "fl_floodzone",
+            "fl_terrace",
+            "fl_open_fire",
+            "fl_furnished",
+        ]
+
+        # Exclude ordinal columns from categorical features
+        categorical_features = [
+            col for col in categorical_features if col not in ordinal_columns
+        ]
+
         categorical_transformer = Pipeline(
             steps=[
                 ("imputer", SimpleImputer(strategy="constant", fill_value="MISSING")),
@@ -136,11 +153,11 @@ class ImmoClass:
             ]
         )
 
-        # Combine preprocessing steps
-        self.preprocessor = ColumnTransformer(
-            transformers=[
-                ("num", numeric_transformer, numeric_features),
-                ("cat", categorical_transformer, categorical_features),
+        # Define preprocessing for ordinal features
+        ordinal_transformer = Pipeline(
+            steps=[
+                ("imputer", SimpleImputer(strategy="most_frequent")),
+                ("ordinal", OrdinalEncoder()),
             ]
         )
 
@@ -149,6 +166,7 @@ class ImmoClass:
             transformers=[
                 ("num", numeric_transformer, numeric_features),
                 ("cat", categorical_transformer, categorical_features),
+                ("ord", ordinal_transformer, ordinal_columns),
             ]
         )
 
