@@ -16,6 +16,7 @@ from sklearn.neighbors import KNeighborsRegressor
 class ImmoClass:
     def __init__(self):
         self.houses_data = None
+        self.appartments_data = None
         self.X_train = None
         self.X_test = None
         self.y_train = None
@@ -40,7 +41,27 @@ class ImmoClass:
         script_dir = os.path.dirname(__file__)
         rel_path = r"data\raw\properties.csv"
         file_path = os.path.join(script_dir, rel_path)
-        self.houses_data = pd.read_csv(file_path)
+
+        chunksize = 50000  # you can adjust this value depending on your memory capacity
+        chunks = []
+
+        for chunk in pd.read_csv(file_path, chunksize=chunksize):
+            chunks.append(chunk[chunk["property_type"] == "HOUSE"])
+
+        self.houses_data = pd.concat(chunks, ignore_index=True)
+
+    def load_appartments_data_pandas(self):
+        script_dir = os.path.dirname(__file__)
+        rel_path = r"data\raw\properties.csv"
+        file_path = os.path.join(script_dir, rel_path)
+
+        chunksize = 50000  # you can adjust this value depending on your memory capacity
+        chunks = []
+
+        for chunk in pd.read_csv(file_path, chunksize=chunksize):
+            chunks.append(chunk[chunk["property_type"] == "APARTMENT"])
+
+        self.appartments_data = pd.concat(chunks, ignore_index=True)
 
     def clean_data(self):
         # Remove all spaces from column names and make them lower case
