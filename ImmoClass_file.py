@@ -74,6 +74,9 @@ class ImmoClass:
         # Remove the construction year
         self.data = self.data.drop(columns=["construction_year"])
 
+        # Remove the propery_type
+        self.data = self.data.drop(columns=["property_type"])
+
     def describe_data(self):
         # Display the first few rows of the dataset
         print(self.data.head())
@@ -99,16 +102,16 @@ class ImmoClass:
         self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(
             X, y, test_size=0.2, random_state=42
         )
+        print(f"Training set: {self.X_train.shape}")
+        print(f"Testing set: {self.X_test.shape}")
 
     def create_preprocessor(self):
-        # # Drop the property_typer column
-        # self.X_train = self.X_train.drop(columns=["property_type"])
         # Define preprocessing for numeric columns (scale them)
         numeric_features = self.data.select_dtypes(include=["int64", "float64"]).columns
-        print(f"Numeric features: {len(numeric_features)}")
-        print(
-            f"The columns of the numeric features for {self.property_type} are: {numeric_features}"
-        )
+        # print(f"Numeric features: {len(numeric_features)}")
+        # print(
+        #     f"The columns of the numeric features for {self.property_type} are: {numeric_features}"
+        # )
         numeric_features = numeric_features.drop(
             "price"
         )  # Exclude 'price' from numeric features
@@ -122,10 +125,10 @@ class ImmoClass:
 
         # Define preprocessing for categorical features (one-hot encode them)
         categorical_features = self.data.select_dtypes(include=["object"]).columns
-        print(
-            f"Categorical features for {self.property_type}: {len(categorical_features)}"
-        )
-        print(f"The columns of the categorical features are: {categorical_features}")
+        # print(
+        #     f"Categorical features for {self.property_type}: {len(categorical_features)}"
+        # )
+        # print(f"The columns of the categorical features are: {categorical_features}")
         categorical_transformer = Pipeline(
             steps=[
                 ("imputer", SimpleImputer(strategy="constant", fill_value="MISSING")),
