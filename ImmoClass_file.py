@@ -12,6 +12,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.neighbors import KNeighborsRegressor
 
+
 class ImmoClass:
     def __init__(self):
         self.houses_data = None
@@ -27,7 +28,7 @@ class ImmoClass:
 
         # clean the data
         self.clean_data()
-        
+
         # split the data
         self.split_data()
 
@@ -43,7 +44,7 @@ class ImmoClass:
         self.houses_data.columns = self.houses_data.columns.str.strip().str.lower()
 
         # Handle missing values
-        #drop rows with missing price
+        # drop rows with missing price
         self.houses_data.dropna(subset=["price"], inplace=True)
 
         # Remove duplicates
@@ -56,7 +57,42 @@ class ImmoClass:
         self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(
             X, y, test_size=0.2, random_state=42
         )
-        
+
+    def create_preprocessor(self):
+        # Define preprocessing for numeric columns (scale them)
+        numeric_features = self.houses_data.select_dtypes(
+            include=["int64", "float64"]
+        ).columns
+        numeric_transformer = Pipeline(
+            steps=[
+                ("imputer", SimpleImputer(strategy="mean")),
+                ("scaler", StandardScaler()),
+            ]
+        )
+
+        # Define preprocessing for categorical features (one-hot encode them)
+        categorical_features = self.houses_data.select_dtypes(
+            include=["object"]
+        ).columns
+        categorical_transformer = Pipeline(
+            steps=[
+                ("imputer", SimpleImputer(strategy="constant", fill_value="MISSING")),
+                ("onehot", OneHotEncoder(handle_unknown="ignore")),
+            ]
+        )
+
+        # Combine preprocessing steps
+        self.preprocessor = ColumnTransformer(
+            transformers=[
+                ("num", numeric_transformer, numeric_features),
+                ("cat", categorical_transformer, categorical_features),
+            ]
+        )
+
+    def preprocess_data(self, data):
+        # Apply transformations to the data
+        return self.preprocessor.transform(data)
+
     def knn_neighbors(self, n_neighbors):
         # Create the preprocessor
         self.create_preprocessor()
@@ -64,7 +100,7 @@ class ImmoClass:
         # Preprocess the training and testing data
         X_train_preprocessed = self.preprocessor.transform(self.X_train)
         X_test_preprocessed = self.preprocessor.transform(self.X_test)
-        
+
         # Define the model
         model = KNeighborsRegressor(n_neighbors=n_neighbors)
 
@@ -84,41 +120,6 @@ class ImmoClass:
         # Calculate and print the mean squared error
         mse = mean_squared_error(self.y_test, y_pred)
         print(f"Mean squared error: {mse}")
-        
-    def create_preprocessor(self):
-        # Define preprocessing for numeric columns (scale them)
-        numeric_features = self.X_train.select_dtypes(include=["int64", "float64"]).columns
-        numeric_transformer = Pipeline(
-            steps=[
-                ("imputer", SimpleImputer(strategy="mean")),
-                ("scaler", StandardScaler()),
-            ]
-        )
-
-        # Define preprocessing for categorical features (one-hot encode them)
-        categorical_features = self.X_train.select_dtypes(include=["object"]).columns
-        categorical_transformer = Pipeline(
-            steps=[
-                ("imputer", SimpleImputer(strategy="constant", fill_value="MISSING")),
-                ("onehot", OneHotEncoder(handle_unknown="ignore")),
-            ]
-        )
-
-        # Combine preprocessing steps
-        self.preprocessor = ColumnTransformer(
-            transformers=[
-                ("num", numeric_transformer, numeric_features),
-                ("cat", categorical_transformer, categorical_features),
-            ]
-        )
-
-        # Fit the preprocessor on the training data
-        self.preprocessor.fit(self.X_train)
-
-
-    def preprocess_data(self, data):
-        # Apply transformations to the data
-        return self.preprocessor.transform(data)
 
     def train_model_linear(self):
         # Create the preprocessor
