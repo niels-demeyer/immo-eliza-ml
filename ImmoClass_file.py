@@ -41,14 +41,13 @@ class ImmoClass:
         script_dir = os.path.dirname(__file__)
         rel_path = r"data\raw\properties.csv"
         file_path = os.path.join(script_dir, rel_path)
-
-        chunksize = 50000  # you can adjust this value depending on your memory capacity
-        chunks = []
-
-        for chunk in pd.read_csv(file_path, chunksize=chunksize):
-            chunks.append(chunk[chunk["property_type"] == self.property_type])
-
-        self.data = pd.concat(chunks, ignore_index=True)
+        df = pd.read_csv(file_path)
+        if self.property_type == "HOUSE":
+            self.data = df[df["property_type"] == "HOUSE"]
+            print(f"We have {self.data.shape[0]} houses in the dataset")
+        elif self.property_type == "APARTMENT":
+            self.data = df[df["property_type"] == "APARTMENT"]
+            print(f"We have {self.data.shape[0]} apartments in the dataset")
 
     def clean_data(self):
         # Remove all spaces from column names and make them lower case
