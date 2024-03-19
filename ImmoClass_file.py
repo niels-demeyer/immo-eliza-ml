@@ -47,6 +47,10 @@ class ImmoClass:
             print(f"We have {self.data.shape[0]} houses in the dataset")
         elif self.property_type == "APARTMENT":
             self.data = df[df["property_type"] == "APARTMENT"]
+            if (
+                "surface_land_sqm" in self.data.columns
+            ):  # remove the column if it exists because it is not relevant for apartments
+                self.data = self.data.drop(columns=["surface_land_sqm"])
             print(f"We have {self.data.shape[0]} apartments in the dataset")
 
     def clean_data(self):
