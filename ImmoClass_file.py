@@ -24,6 +24,7 @@ from sklearn.neighbors import KNeighborsRegressor
 from sklearn.ensemble import RandomForestRegressor
 import joblib
 import json
+from xgboost import XGBRegressor
 
 
 class ImmoClass:
@@ -262,9 +263,6 @@ class ImmoClass:
         # )
 
     def train_model_xgboost(self):
-        # Import XGBRegressor here
-        from xgboost import XGBRegressor
-
         # Define the model
         model = XGBRegressor(n_estimators=100, learning_rate=0.05, n_jobs=-1)
 
