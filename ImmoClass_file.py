@@ -283,8 +283,9 @@ class ImmoClass:
             print(
                 f"Model intercept for {model_type.capitalize()}: {results['intercept']}"
             )
-        print(f"R^2 score for {model_type.capitalize()}: {results['r2_score']}")
-        print(f"Mean squared error for {model_type.capitalize()}: {results['mse']}")
+        else:
+            print(f"R^2 score for {model_type.capitalize()}: {results['r2_score']}")
+            print(f"Mean squared error for {model_type.capitalize()}: {results['mse']}")
 
     def save_model_results(self):
         # save the model results as a json file
