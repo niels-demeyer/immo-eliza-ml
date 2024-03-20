@@ -273,25 +273,25 @@ class ImmoClass:
 
     def print_model_results(self):
         # Check if the model type is valid
-        if self.model_type not in self.model_results:
-            print(f"Invalid model type: {self.model_type}")
+        if self.property_type not in self.model_results:
+            print(f"Invalid model type: {self.property_type}")
             return
 
         # Print the model results
-        results = self.model_results[self.model_type]
-        if self.model_type == "linear":
+        results = self.model_results[self.property_type]
+        if self.property_type == "linear":
             print(
-                f"Model coefficients for {self.model_type.capitalize()}: {results['coefficients']}"
+                f"Model coefficients for {self.property_type.capitalize()}: {results['coefficients']}"
             )
             print(
-                f"Model intercept for {self.model_type.capitalize()}: {results['intercept']}"
+                f"Model intercept for {self.property_type  .capitalize()}: {results['intercept']}"
             )
         else:
             print(
-                f"R^2 score for {self.model_type.capitalize()}: {results['r2_score']}"
+                f"R^2 score for {self.property_type.capitalize()}: {results['r2_score']}"
             )
             print(
-                f"Mean squared error for {self.model_type.capitalize()}: {results['mse']}"
+                f"Mean squared error for {self.property_type.capitalize()}: {results['mse']}"
             )
 
     def save_model_results(self):
