@@ -48,6 +48,12 @@ class ImmoClass:
         # clean the data
         self.clean_data()
 
+        # # Print the remaining columns of the data the use in the predict
+        # print(self.data.columns)
+
+        # # Print a sample of the data by printing the first 5 rows as a list of dictionaries
+        # print(self.data.head().to_dict(orient="records"))
+
         # # describe the data
         # self.describe_data()
 
@@ -338,3 +344,23 @@ class ImmoClass:
         # Write updated data back to file
         with open(file_path, "w") as f:
             json.dump(existing_data, f)
+
+    def predict_apartment(self, input_data):
+        # Load the model from the pkl file
+        script_dir = os.path.dirname(__file__)
+        rel_path = r"data\clean\APARTMENT_xgboost.pkl"
+        file_path = os.path.join(script_dir, rel_path)
+        model = joblib.load(file_path)
+
+        # Convert the input data to a DataFrame
+        input_data_df = pd.DataFrame([input_data])
+
+        # Preprocess the input data using the preprocessor
+        input_data_transformed = self.preprocessor.transform(input_data_df)
+
+        # Use the model to make predictions
+        predictions = model.predict(input_data_transformed)
+
+        # Print the predictions
+        print(predictions)
+        return predictions
