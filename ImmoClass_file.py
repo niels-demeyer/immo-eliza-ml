@@ -256,6 +256,9 @@ class ImmoClass:
             "r2_score": r2,
             "mse": mse,
         }
+        # print(
+        #     f"Random forest model results for {self.property_type}: {self.model_results['random_forest']}"
+        # )
 
     def save_model(self, model_type):
         # Check if the model type is valid
