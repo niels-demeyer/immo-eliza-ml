@@ -36,6 +36,8 @@ class ImmoClass:
         self.model_linear = None
         self.model_random_forest = None
         self.model_knn = None
+        self.models = {}
+        self.model_results = {}
 
         # load the data
         self.load_data_pandas()
@@ -200,9 +202,6 @@ class ImmoClass:
         # Save the trained model with best parameters
         self.model_knn = grid_search.best_estimator_
 
-        # Predict on the test set
-        y_pred = self.model_knn.predict(self.X_test)
-
     def train_model_linear(self):
         # Define the model
         model = LinearRegression()
@@ -211,7 +210,7 @@ class ImmoClass:
         model.fit(self.X_train, self.y_train)
 
         # Save the trained model
-        self.model_linear = model
+        self.models["linear"] = model
 
         # Print the model's coefficients and intercept
         print(f"Model coefficients for Linear Regression: {model.coef_}")
@@ -228,6 +227,14 @@ class ImmoClass:
         mse = mean_squared_error(self.y_test, y_pred)
         print(f"Mean squared error for Linear Regression: {mse}")
 
+        # Save the model results
+        self.model_results["linear"] = {
+            "coefficients": model.coef_,
+            "intercept": model.intercept_,
+            "r2_score": r2,
+            "mse": mse,
+        }
+
     def train_model_random_forest(self):
         # Define the model
         model = RandomForestRegressor(
@@ -238,7 +245,7 @@ class ImmoClass:
         model.fit(self.X_train, self.y_train)
 
         # Save the trained model
-        self.model_random_forest = model
+        self.models["random_forest"] = model
 
         # Predict on the test set
         y_pred = model.predict(self.X_test)
@@ -251,23 +258,37 @@ class ImmoClass:
         mse = mean_squared_error(self.y_test, y_pred)
         print(f"Mean squared error for Random Forest: {mse}")
 
-    def save_model(self, name, model_type):
-        script_dir = os.path.dirname(__file__)
-        name_output = name + ".pkl"
-        rel_path = r"data\clean\\"
-        file_path = os.path.join(script_dir, rel_path, name_output)
+        # Save the model results
+        self.model_results["random_forest"] = {"r2_score": r2, "mse": mse}
 
-        if model_type == "linear":
-            model = self.model_linear
-        elif model_type == "random_forest":
-            model = self.model_random_forest
-        elif model_type == "knn":
-            model = self.model_knn
-        else:
+    def save_model(self, model_type):
+        # Check if the model type is valid
+        if model_type not in self.models:
             print(f"Invalid model type: {model_type}")
             return
 
+        # Save the model
+        model = self.models[model_type]
+        script_dir = os.path.dirname(__file__)
+        name_output = model_type + ".pkl"
+        rel_path = r"data\clean\\"
+        file_path = os.path.join(script_dir, rel_path, name_output)
         joblib.dump(model, file_path)
+
+    def print_model_results(self, model_type):
+        # Check if the model type is valid
+        if model_type not in self.model_results:
+            print(f"Invalid model type: {model_type}")
+            return
+
+        # Print the model results
+        results = self.model_results[model_type]
+        print(
+            f"Model coefficients for {model_type.capitalize()}: {results['coefficients']}"
+        )
+        print(f"Model intercept for {model_type.capitalize()}: {results['intercept']}")
+        print(f"R^2 score for {model_type.capitalize()}: {results['r2_score']}")
+        print(f"Mean squared error for {model_type.capitalize()}: {results['mse']}")
 
     def streamlit_app(self):
         st.set_page_config(page_title="Belgium Real Estate Analysis", layout="wide")
