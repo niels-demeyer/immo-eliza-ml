@@ -271,24 +271,28 @@ class ImmoClass:
         file_path = os.path.join(script_dir, rel_path, name_output)
         joblib.dump(model, file_path)
 
-    def print_model_results(self, model_type):
+    def print_model_results(self):
         # Check if the model type is valid
-        if model_type not in self.model_results:
-            print(f"Invalid model type: {model_type}")
+        if self.model_type not in self.model_results:
+            print(f"Invalid model type: {self.model_type}")
             return
 
         # Print the model results
-        results = self.model_results[model_type]
-        if model_type == "linear":
+        results = self.model_results[self.model_type]
+        if self.model_type == "linear":
             print(
-                f"Model coefficients for {model_type.capitalize()}: {results['coefficients']}"
+                f"Model coefficients for {self.model_type.capitalize()}: {results['coefficients']}"
             )
             print(
-                f"Model intercept for {model_type.capitalize()}: {results['intercept']}"
+                f"Model intercept for {self.model_type.capitalize()}: {results['intercept']}"
             )
         else:
-            print(f"R^2 score for {model_type.capitalize()}: {results['r2_score']}")
-            print(f"Mean squared error for {model_type.capitalize()}: {results['mse']}")
+            print(
+                f"R^2 score for {self.model_type.capitalize()}: {results['r2_score']}"
+            )
+            print(
+                f"Mean squared error for {self.model_type.capitalize()}: {results['mse']}"
+            )
 
     def save_model_results(self):
         # Convert numpy arrays in model results to lists
