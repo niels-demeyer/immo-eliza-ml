@@ -22,6 +22,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.ensemble import RandomForestRegressor
+import joblib
 
 
 class ImmoClass:
@@ -248,6 +249,24 @@ class ImmoClass:
         # Calculate and print the mean squared error
         mse = mean_squared_error(self.y_test, y_pred)
         print(f"Mean squared error for Random Forest: {mse}")
+
+    def save_model(self, name, model_type):
+        script_dir = os.path.dirname(__file__)
+        name_output = name + ".pkl"
+        rel_path = r"data\clean\\"
+        file_path = os.path.join(script_dir, rel_path, name_output)
+
+        if model_type == "linear":
+            model = self.model_linear
+        elif model_type == "random_forest":
+            model = self.model_random_forest
+        elif model_type == "knn":
+            model = self.model_knn
+        else:
+            print(f"Invalid model type: {model_type}")
+            return
+
+        joblib.dump(model, file_path)
 
     def streamlit_app(self):
         st.set_page_config(page_title="Belgium Real Estate Analysis", layout="wide")
