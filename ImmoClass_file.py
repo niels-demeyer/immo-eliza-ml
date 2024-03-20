@@ -298,8 +298,26 @@ class ImmoClass:
         script_dir = os.path.dirname(__file__)
         rel_path = r"data\clean\model_results.json"
         file_path = os.path.join(script_dir, rel_path)
+
+        # Load existing data
+        if os.path.exists(file_path):
+            with open(file_path, "r") as f:
+                existing_data = json.load(f)
+        else:
+            existing_data = {}
+
+        # Update existing data with new data
+        for model_type, results in self.model_results.items():
+            if self.property_type not in existing_data:
+                existing_data[self.property_type] = {}
+            if model_type in existing_data[self.property_type]:
+                existing_data[self.property_type][model_type].append(results)
+            else:
+                existing_data[self.property_type][model_type] = [results]
+
+        # Write updated data back to file
         with open(file_path, "w") as f:
-            json.dump(self.model_results, f)
+            json.dump(existing_data, f)
 
     def streamlit_app(self):
         st.set_page_config(page_title="Belgium Real Estate Analysis", layout="wide")
