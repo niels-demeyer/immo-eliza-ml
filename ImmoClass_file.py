@@ -272,27 +272,10 @@ class ImmoClass:
         joblib.dump(model, file_path)
 
     def print_model_results(self):
-        # Check if the model type is valid
-        if self.property_type not in self.model_results:
-            print(f"Invalid model type: {self.property_type}")
-            return
-
-        # Print the model results
-        results = self.model_results[self.property_type]
-        if self.property_type == "linear":
-            print(
-                f"Model coefficients for {self.property_type.capitalize()}: {results['coefficients']}"
-            )
-            print(
-                f"Model intercept for {self.property_type  .capitalize()}: {results['intercept']}"
-            )
-        else:
-            print(
-                f"R^2 score for {self.property_type.capitalize()}: {results['r2_score']}"
-            )
-            print(
-                f"Mean squared error for {self.property_type.capitalize()}: {results['mse']}"
-            )
+        for model_type, results in self.model_results.items():
+            print(f"Model: {model_type}")
+            for key, value in results.items():
+                print(f"{key}: {value}")
 
     def save_model_results(self):
         # Convert numpy arrays in model results to lists
