@@ -23,7 +23,6 @@ from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.ensemble import RandomForestRegressor
 import joblib
-from xgboost import XGBRegressor
 import json
 
 
@@ -38,6 +37,7 @@ class ImmoClass:
         self.model_linear = None
         self.model_random_forest = None
         self.model_knn = None
+        self.model_xgboost = None
         self.models = {}
         self.model_results = {}
 
@@ -262,6 +262,9 @@ class ImmoClass:
         # )
 
     def train_model_xgboost(self):
+        # Import XGBRegressor here
+        from xgboost import XGBRegressor
+
         # Define the model
         model = XGBRegressor(n_estimators=100, learning_rate=0.05, n_jobs=-1)
 
