@@ -23,6 +23,7 @@ from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.ensemble import RandomForestRegressor
 import joblib
+import json  # to save the model results as a json file
 
 
 class ImmoClass:
@@ -284,6 +285,14 @@ class ImmoClass:
             )
         print(f"R^2 score for {model_type.capitalize()}: {results['r2_score']}")
         print(f"Mean squared error for {model_type.capitalize()}: {results['mse']}")
+
+    def save_model_results(self):
+        # save the model results as a json file
+        script_dir = os.path.dirname(__file__)
+        rel_path = r"data\clean\model_results.json"
+        file_path = os.path.join(script_dir, rel_path)
+        with open(file_path, "w") as f:
+            json.dump(self.model_results, f)
 
     def streamlit_app(self):
         st.set_page_config(page_title="Belgium Real Estate Analysis", layout="wide")
