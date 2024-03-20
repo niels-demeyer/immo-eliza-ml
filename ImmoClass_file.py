@@ -288,7 +288,13 @@ class ImmoClass:
             print(f"Mean squared error for {model_type.capitalize()}: {results['mse']}")
 
     def save_model_results(self):
-        # save the model results as a json file
+        # Convert numpy arrays in model results to lists
+        for model_type, results in self.model_results.items():
+            for key, value in results.items():
+                if isinstance(value, np.ndarray):
+                    results[key] = value.tolist()
+
+        # Save the model results as a json file
         script_dir = os.path.dirname(__file__)
         rel_path = r"data\clean\model_results.json"
         file_path = os.path.join(script_dir, rel_path)
