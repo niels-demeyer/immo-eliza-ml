@@ -23,7 +23,8 @@ from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.ensemble import RandomForestRegressor
 import joblib
-import json  # to save the model results as a json file
+from xgboost import XGBRegressor
+import json
 
 
 class ImmoClass:
@@ -216,10 +217,10 @@ class ImmoClass:
         # Predict on the test set
         y_pred = model.predict(self.X_test)
 
-        # Calculate and print the R^2 score
+        # Calculate the R^2 score
         r2 = r2_score(self.y_test, y_pred)
 
-        # Calculate and print the mean squared error
+        # Calculate the mean squared error
         mse = mean_squared_error(self.y_test, y_pred)
 
         # Save the model results
@@ -245,10 +246,10 @@ class ImmoClass:
         # Predict on the test set
         y_pred = model.predict(self.X_test)
 
-        # Calculate and print the R^2 score
+        # Calculate the R^2 score
         r2 = r2_score(self.y_test, y_pred)
 
-        # Calculate and print the mean squared error
+        # Calculate the mean squared error
         mse = mean_squared_error(self.y_test, y_pred)
 
         # Save the model results
@@ -259,6 +260,31 @@ class ImmoClass:
         # print(
         #     f"Random forest model results for {self.property_type}: {self.model_results['random_forest']}"
         # )
+
+    def train_model_xgboost(self):
+        # Define the model
+        model = XGBRegressor(n_estimators=100, learning_rate=0.05, n_jobs=-1)
+
+        # Train the model
+        model.fit(self.X_train, self.y_train)
+
+        # Save the trained model
+        self.models["xgboost"] = model
+
+        # Predict on the test set
+        y_pred = model.predict(self.X_test)
+
+        # Calculate the R^2 score
+        r2 = r2_score(self.y_test, y_pred)
+
+        # Calculate the mean squared error
+        mse = mean_squared_error(self.y_test, y_pred)
+
+        # Save the model results
+        self.model_results["xgboost"] = {
+            "r2_score": r2,
+            "mse": mse,
+        }
 
     def save_model(self, model_type):
         # Check if the model type is valid
