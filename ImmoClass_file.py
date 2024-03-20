@@ -212,20 +212,14 @@ class ImmoClass:
         # Save the trained model
         self.models["linear"] = model
 
-        # Print the model's coefficients and intercept
-        print(f"Model coefficients for Linear Regression: {model.coef_}")
-        print(f"Model intercept for Linear Regression: {model.intercept_}")
-
         # Predict on the test set
         y_pred = model.predict(self.X_test)
 
         # Calculate and print the R^2 score
         r2 = r2_score(self.y_test, y_pred)
-        print(f"R^2 score for Linear Regression: {r2}")
 
         # Calculate and print the mean squared error
         mse = mean_squared_error(self.y_test, y_pred)
-        print(f"Mean squared error for Linear Regression: {mse}")
 
         # Save the model results
         self.model_results["linear"] = {
@@ -252,11 +246,9 @@ class ImmoClass:
 
         # Calculate and print the R^2 score
         r2 = r2_score(self.y_test, y_pred)
-        print(f"R^2 score for Random Forest: {r2}")
 
         # Calculate and print the mean squared error
         mse = mean_squared_error(self.y_test, y_pred)
-        print(f"Mean squared error for Random Forest: {mse}")
 
         # Save the model results
         self.model_results["random_forest"] = {"r2_score": r2, "mse": mse}
