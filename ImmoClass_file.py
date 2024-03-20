@@ -338,11 +338,3 @@ class ImmoClass:
         # Write updated data back to file
         with open(file_path, "w") as f:
             json.dump(existing_data, f)
-
-    def streamlit_app(self):
-        st.set_page_config(page_title="Belgium Real Estate Analysis", layout="wide")
-
-        st.title("Belgium Real Estate Analysis")
-        st.markdown(
-            "This is a simple web app that shows the average price of houses per municipality in Belgium"
-        )
