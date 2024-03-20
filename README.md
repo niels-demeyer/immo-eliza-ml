@@ -30,36 +30,18 @@ Ensure you have Git and Python installed on your system. Some commands in the ma
 
 ## Usage 🚀
 
-**Update URLs to fetch the newest information:**
+**run the model files**
+1. Choose the desired script based on the machine learning algorithm you want to use (KNN, Linear Regression, Random Forest Regression, or XGBoost Regression).
+2. Run the script using the command line or terminal:
+   - For KNN: `python knn.py`
+   - For Linear Regression: `python linear_regression.py`
+   - For Random Forest Regression: `python random_forest.py`
+   - For XGBoost Regression: `python model_xgboost.py`
+3. The script will create an instance of the respective machine learning algorithm for houses and apartments, train their models, save the models, print the model results, and save the results to pkl files.
 
-    cd scrapy/immoweb/immoweb
-    scrapy crawl most_expensive -o output.json
+**predict a property**
 
-It can take some time.
-
-**Navigate back to the root of repository:**
-
-    cd ../../..
-
-**Navigate to the hrequests folder\*\***
-
-    cd hrequests
-
-**Open the [main.py](hrequests/main.py) using code editor and change these values:**
-
-![How to setup hrequests](img/how_to_setup_hrequests.png)
-
-by default it scrapes 500 urls, you can change it by changing the value of the `end` variable.
-
-by default it saves the result to the my_database.sqlite file in the first_500 table, you can change it by changing the value of the `table_name` variable.
-
-**After changing the values, run the main.py file using the following command:**
-
-    python3 main.py
-
-It will start scraping the data from the urls and save it to the database. It can take some time, so be patient.
-
-Your data will be saved in the `my_database.sqlite` file.
+Define a property you want a prediction on in the `python predict.py` and the xgboost model will be used to give you a prediction.
 
 ## Sources 📚
 
