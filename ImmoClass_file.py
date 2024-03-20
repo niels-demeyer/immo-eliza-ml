@@ -17,7 +17,7 @@ from sklearn.compose import (
 )
 from sklearn.pipeline import Pipeline
 from sklearn.impute import SimpleImputer
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.neighbors import KNeighborsRegressor
@@ -181,26 +181,27 @@ class ImmoClass:
         self.X_train = self.preprocessor.fit_transform(self.X_train)
         self.X_test = self.preprocessor.transform(self.X_test)
 
-    def train_model_knn(self, n_neighbors):
+    def train_model_knn(self):
         # Define the model
-        model = KNeighborsRegressor(n_neighbors=n_neighbors)
+        model = KNeighborsRegressor()
 
-        # Train the model
-        model.fit(self.X_train, self.y_train)
+        # Define the parameter values to test
+        param_grid = {"n_neighbors": range(1, 3)}
 
-        # Save the trained model
-        self.model_knn = model
+        # Create the grid search object
+        grid_search = GridSearchCV(model, param_grid, cv=5)
+
+        # Fit the grid search
+        grid_search.fit(self.X_train, self.y_train)
+
+        # Print the best parameters
+        print(grid_search.best_params_)
+
+        # Save the trained model with best parameters
+        self.model_knn = grid_search.best_estimator_
 
         # Predict on the test set
-        y_pred = model.predict(self.X_test)
-
-        # Calculate and print the R^2 score
-        r2 = r2_score(self.y_test, y_pred)
-        print(f"R^2 score: {r2}")
-
-        # Calculate and print the mean squared error
-        mse = mean_squared_error(self.y_test, y_pred)
-        print(f"Mean squared error: {mse}")
+        y_pred = self.model_knn.predict(self.X_test)
 
     def train_model_linear(self):
         # Define the model
