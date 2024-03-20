@@ -296,7 +296,7 @@ class ImmoClass:
         # Save the model
         model = self.models[model_type]
         script_dir = os.path.dirname(__file__)
-        name_output = model_type + ".pkl"
+        name_output = str(self.property_type) + "_" + str(model_type) + ".pkl"
         rel_path = r"data\clean\\"
         file_path = os.path.join(script_dir, rel_path, name_output)
         joblib.dump(model, file_path)
