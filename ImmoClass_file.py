@@ -275,10 +275,13 @@ class ImmoClass:
 
         # Print the model results
         results = self.model_results[model_type]
-        print(
-            f"Model coefficients for {model_type.capitalize()}: {results['coefficients']}"
-        )
-        print(f"Model intercept for {model_type.capitalize()}: {results['intercept']}")
+        if model_type == "linear":
+            print(
+                f"Model coefficients for {model_type.capitalize()}: {results['coefficients']}"
+            )
+            print(
+                f"Model intercept for {model_type.capitalize()}: {results['intercept']}"
+            )
         print(f"R^2 score for {model_type.capitalize()}: {results['r2_score']}")
         print(f"Mean squared error for {model_type.capitalize()}: {results['mse']}")
 
