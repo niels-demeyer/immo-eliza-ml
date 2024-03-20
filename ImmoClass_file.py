@@ -252,7 +252,10 @@ class ImmoClass:
         mse = mean_squared_error(self.y_test, y_pred)
 
         # Save the model results
-        self.model_results["random_forest"] = {"r2_score": r2, "mse": mse}
+        self.model_results["random_forest"] = {
+            "r2_score": r2,
+            "mse": mse,
+        }
 
     def save_model(self, model_type):
         # Check if the model type is valid
