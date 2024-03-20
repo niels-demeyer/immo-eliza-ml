@@ -57,7 +57,40 @@ if __name__ == "__main__":
         "fl_double_glazing": 1,  # Ordinal (0 or 1)
         "cadastral_income": 1000,  # Numeric
     }
+    input_house = {
+        "subproperty_type": "HOUSE",  # Categorical
+        "region": "Flanders",  # Categorical
+        "province": "Antwerp",  # Categorical
+        "locality": "Antwerp",  # Categorical
+        "zip_code": 2050,  # Numeric
+        "total_area_sqm": 200.0,  # Numeric
+        "surface_land_sqm": 100.0,  # Numeric
+        "nbr_frontages": 2,  # Numeric
+        "nbr_bedrooms": 3,  # Numeric
+        "equipped_kitchen": "INSTALLED",  # Categorical
+        "fl_furnished": 0,  # Ordinal (0 or 1)
+        "fl_open_fire": 0,  # Ordinal (0 or 1)
+        "fl_terrace": 1,  # Ordinal (0 or 1)
+        "terrace_sqm": 20.0,  # Numeric
+        "fl_garden": 1,  # Ordinal (0 or 1)
+        "garden_sqm": 50.0,  # Numeric
+        "fl_swimming_pool": 0,  # Ordinal (0 or 1)
+        "fl_floodzone": 0,  # Ordinal (0 or 1)
+        "state_building": "NEW",  # Categorical
+        "primary_energy_consumption_sqm": 100.0,  # Numeric
+        "epc": 200,  # Numeric
+        "heating_type": "GAS",  # Categorical
+        "fl_double_glazing": 1,  # Ordinal (0 or 1)
+        "cadastral_income": 2000,  # Numeric
+    }
+    # Create an instance of ImmoClass for house
+    immo_house = ImmoClass("HOUSE")
+
+    # Use the predict_house method with the input_house dictionary
+    house = immo_house.predict_house(input_house)
+    print(f"Predicted price for the house: {house}")
     # Create an instance of ImmoClass
     immo = ImmoClass("APARTMENT")
     # Use the predict_apartment method with the input_apartment dictionary
-    immo.predict_apartment(input_apartment)
+    apartment = immo.predict_apartment(input_apartment)
+    print(f"Predicted price for the apartment: {apartment}")

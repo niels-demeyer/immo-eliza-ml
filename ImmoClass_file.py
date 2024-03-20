@@ -364,3 +364,25 @@ class ImmoClass:
         # Print the predictions
         print(predictions)
         return predictions
+
+    def predict_house(self, input_data):
+        # Load the model from the pkl file
+        script_dir = os.path.dirname(__file__)
+        rel_path = (
+            r"data\clean\HOUSE_xgboost.pkl"  # Update this path to your house model
+        )
+        file_path = os.path.join(script_dir, rel_path)
+        model = joblib.load(file_path)
+
+        # Convert the input data to a DataFrame
+        input_data_df = pd.DataFrame([input_data])
+
+        # Preprocess the input data using the preprocessor
+        input_data_transformed = self.preprocessor.transform(input_data_df)
+
+        # Use the model to make predictions
+        predictions = model.predict(input_data_transformed)
+
+        # Print the predictions
+        print(predictions)
+        return predictions
