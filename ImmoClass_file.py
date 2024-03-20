@@ -181,7 +181,7 @@ class ImmoClass:
         self.X_train = self.preprocessor.fit_transform(self.X_train)
         self.X_test = self.preprocessor.transform(self.X_test)
 
-    def knn_neighbors(self, n_neighbors):
+    def train_model_knn(self, n_neighbors):
         # Define the model
         model = KNeighborsRegressor(n_neighbors=n_neighbors)
 
