@@ -66,14 +66,14 @@ class ImmoClass:
     # Load the data
     def load_data_pandas(self):
         script_dir = os.path.dirname(__file__)
-        rel_path = r"data\raw\properties.csv"
+        rel_path = os.path.join("data", "raw", "properties.csv")
         file_path = os.path.join(script_dir, rel_path)
         df = pd.read_csv(file_path)
         self.data = df
 
     def save_df(self):
         script_dir = os.path.dirname(__file__)
-        rel_path = r"data\raw\houses.csv"
+        rel_path = os.path.join("data", "raw", "houses.csv")
         file_path = os.path.join(script_dir, rel_path)
         self.data.to_csv(file_path, index=False)
 
@@ -303,7 +303,7 @@ class ImmoClass:
         model = self.models[model_type]
         script_dir = os.path.dirname(__file__)
         name_output = str(self.property_type) + "_" + str(model_type) + ".pkl"
-        rel_path = r"data\clean\\"
+        rel_path = os.path.join("data", "clean")
         file_path = os.path.join(script_dir, rel_path, name_output)
         joblib.dump(model, file_path)
 
@@ -322,7 +322,7 @@ class ImmoClass:
 
         # Save the model results as a json file
         script_dir = os.path.dirname(__file__)
-        rel_path = r"data\clean\model_results.json"
+        rel_path = os.path.join("data", "clean", "model_results.json")
         file_path = os.path.join(script_dir, rel_path)
 
         # Load existing data
@@ -345,11 +345,10 @@ class ImmoClass:
         with open(file_path, "w") as f:
             json.dump(existing_data, f)
 
-
     def predict_apartment(self, input_data):
         # Load the model from the pkl file
         script_dir = os.path.dirname(__file__)
-        rel_path = r"data\clean\APARTMENT_xgboost.pkl"
+        rel_path = os.path.join("data", "clean", "APARTMENT_xgboost.pkl")
         file_path = os.path.join(script_dir, rel_path)
         model = joblib.load(file_path)
 
@@ -363,7 +362,7 @@ class ImmoClass:
         predictions = model.predict(input_data_transformed)
 
         # Convert the predictions to a string
-        predictions_str = np.array2string(predictions).strip('[]')
+        predictions_str = np.array2string(predictions).strip("[]")
 
         # Print the predictions
         print(type(predictions_str))
@@ -373,9 +372,9 @@ class ImmoClass:
     def predict_house(self, input_data):
         # Load the model from the pkl file
         script_dir = os.path.dirname(__file__)
-        rel_path = (
-            r"data\clean\HOUSE_xgboost.pkl"  # Update this path to your house model
-        )
+        rel_path = os.path.join(
+            "data", "clean", "HOUSE_xgboost.pkl"
+        )  # Update this path to your house model
         file_path = os.path.join(script_dir, rel_path)
         model = joblib.load(file_path)
 
@@ -389,7 +388,7 @@ class ImmoClass:
         predictions = model.predict(input_data_transformed)
 
         # Convert the predictions to a string
-        predictions_str = np.array2string(predictions).strip('[]')
+        predictions_str = np.array2string(predictions).strip("[]")
 
         # Print the predictions
         print(type(predictions_str))
