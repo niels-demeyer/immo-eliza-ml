@@ -345,6 +345,7 @@ class ImmoClass:
         with open(file_path, "w") as f:
             json.dump(existing_data, f)
 
+
     def predict_apartment(self, input_data):
         # Load the model from the pkl file
         script_dir = os.path.dirname(__file__)
@@ -361,9 +362,13 @@ class ImmoClass:
         # Use the model to make predictions
         predictions = model.predict(input_data_transformed)
 
+        # Convert the predictions to a string
+        predictions_str = np.array2string(predictions).strip('[]')
+
         # Print the predictions
-        print(predictions)
-        return predictions
+        print(type(predictions_str))
+        print(predictions_str)
+        return predictions_str
 
     def predict_house(self, input_data):
         # Load the model from the pkl file
@@ -383,6 +388,10 @@ class ImmoClass:
         # Use the model to make predictions
         predictions = model.predict(input_data_transformed)
 
+        # Convert the predictions to a string
+        predictions_str = np.array2string(predictions).strip('[]')
+
         # Print the predictions
-        print(predictions)
-        return predictions
+        print(type(predictions_str))
+        print(predictions_str)
+        return predictions_str
