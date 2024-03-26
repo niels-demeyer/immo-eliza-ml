@@ -1,18 +1,3 @@
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
-
-:root {
-  @apply font-inter;
-  @apply text-base;
-  @apply font-normal;
-  @apply text-light;
-  @apply bg-dark;
-}
-
-body {
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
