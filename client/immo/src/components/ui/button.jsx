@@ -36,8 +36,8 @@ const buttonVariants = cva(
 );
 
 const Button = React.forwardRef(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
-    const Comp = asChild ? Slot : "button";
+  ({ className, variant, size, as = "button", ...props }, ref) => {
+    const Comp = as === "child" ? Slot : as;
     return (
       <Comp
         className={cn(buttonVariants({ variant, size, className }))}
@@ -53,7 +53,7 @@ Button.propTypes = {
   className: PropTypes.string,
   variant: PropTypes.string,
   size: PropTypes.string,
-  asChild: PropTypes.bool,
+  as: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
 };
 
 export default Button;

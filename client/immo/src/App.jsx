@@ -1,12 +1,12 @@
 import "./App.css";
-import Navbar from "./components/Navbar";
 import PostRequestComponent from "./components/PostRequestComponent"; // Import PostRequestComponent
-import Button from "./components/ui/button"; // Change this line
+import Button from "./components/ui/button";
+import Choice from "./components/Choice";
 
 function App() {
   return (
     <div className="App">
-      <Navbar />
+      <Choice />
       <PostRequestComponent />
       <Button>Click me</Button>
     </div>
