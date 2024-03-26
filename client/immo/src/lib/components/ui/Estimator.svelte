@@ -1,6 +1,9 @@
 <script lang="ts">
   import { writable } from 'svelte/store';
-  import { onMount } from 'svelte';
+  import { superForm, SuperValidated, Infer } from "sveltekit-superforms";
+  import { zodClient } from "sveltekit-superforms/adapters";
+  import { formSchema, FormSchema } from "./schema";
+  import * as Form from "./index";
 
   interface FormData {
     subproperty_type: string;
@@ -29,7 +32,7 @@
     cadastral_income: number;
   }
 
-  let formData = writable<FormData>({
+  let formDataStore = writable<FormData>({
     subproperty_type: "HOUSE",
     region: "Flanders",
     province: "Antwerp",
@@ -56,24 +59,36 @@
     cadastral_income: 2000
   });
 
-  async function estimate(): Promise<void> {
+  let data: SuperValidated<Infer<FormSchema>> = $formDataStore;
+
+  const form = superForm(data, {
+    validators: zodClient(formSchema),
+  });
+
+  const { form: formData, enhance } = form;
+
+  async function estimate(event: Event): Promise<void> {
+    event.preventDefault();
     let response = await fetch('http://127.0.0.1:5000/predict/house', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify($formData)
+      body: JSON.stringify(formData)
     });
     let data = await response.json();
     console.log(data);
   }
 </script>
 
-{#each Object.entries($formData) as [key, value] (key)}
-  <div class="card">
-    <label for={key}>{key}</label>
-    <input id={key} bind:value={$formData[key]} />
-  </div>
-{/each}
-
-<button on:click={estimate}>Estimate</button>
+<form method="POST" use:enhance on:submit|preventDefault={estimate}>
+  <Form.Field form={form} name="subproperty_type">
+    <Form.Control let:attrs>
+      <Form.Label>Subproperty Type</Form.Label>
+      <Form.Input {...attrs} bind:value={formData.subproperty_type} />
+    </Form.Control>
+    <Form.FieldErrors />
+  </Form.Field>
+  <!-- Repeat for other fields -->
+  <Form.Button type="submit">Submit</Form.Button>
+</form>
