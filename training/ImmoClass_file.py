@@ -41,6 +41,7 @@ class ImmoClass:
         self.model_xgboost = None
         self.models = {}
         self.model_results = {}
+        self.column_values = None
 
         # load the data
         self.load_data_pandas()
@@ -100,6 +101,14 @@ class ImmoClass:
 
         # Remove the propery_type
         self.data = self.data.drop(columns=["property_type"])
+
+    def print_non_numerical_column_values(self):
+        # Iterate over the columns
+        for column in self.data.columns:
+            # Check if the column is not numerical
+            if self.data[column].dtype not in ["int64", "float64"]:
+                # Print the unique values of the column
+                print(f"{column}: {self.data[column].unique().tolist()}")
 
     def describe_data(self):
         # Display the first few rows of the dataset
