@@ -2,8 +2,8 @@
 <script lang="ts">
   import { Button } from "$lib/components/ui/button";
   import { Card } from "$lib/components/ui/card";
+  import Estimator from "$lib/components/ui/Estimator.svelte";
 </script>
-
 
 <section class="text-gray-600 body-font">
   <div class="container px-5 py-24 mx-auto">
@@ -34,6 +34,7 @@
                 </div>
             </div>
         </Card>
+        <Estimator />
     </div>
     <button class="flex mx-auto mt-16 text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">Estimate</button>
   </div>
