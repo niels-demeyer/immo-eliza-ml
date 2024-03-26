@@ -1,13 +1,15 @@
 import sys
 import os
+from flask import Flask, request, jsonify
+from flask_cors import CORS  # Import Flask-CORS
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from flask import Flask, request, jsonify
 from training.ImmoClass_file import ImmoClass
 
 # Create an instance of the Flask class
 app = Flask(__name__)
+CORS(app)  # Enable CORS on your Flask application
 
 
 # Define the routes for House
