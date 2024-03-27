@@ -2,12 +2,24 @@ import importlib.util
 import os
 import streamlit as st
 
+# Current file directory
 current_dir = os.path.dirname(os.path.realpath(__file__))
-file_to_import = os.path.join(current_dir, "..", "training", "ImmoClass_file.py")
 
-spec = importlib.util.spec_from_file_location("ImmoClass", file_to_import)
-ImmoClass = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(ImmoClass)
+# File to import (ImmoClass)
+file_to_import_immo = os.path.join(current_dir, "..", "training", "ImmoClass_file.py")
+spec_immo = importlib.util.spec_from_file_location("ImmoClass", file_to_import_immo)
+ImmoClass = importlib.util.module_from_spec(spec_immo)
+spec_immo.loader.exec_module(ImmoClass)
+
+# File to import (StreamlitClass)
+file_to_import_streamlit = os.path.join(
+    current_dir, "streamlit", "StreamlitClass_file.py"
+)
+spec_streamlit = importlib.util.spec_from_file_location(
+    "StreamlitClass", file_to_import_streamlit
+)
+StreamlitClass = importlib.util.module_from_spec(spec_streamlit)
+spec_streamlit.loader.exec_module(StreamlitClass)
 
 
 def main():
