@@ -2,13 +2,9 @@ import importlib.util
 import os
 import streamlit as st
 
-# Get the current directory
 current_dir = os.path.dirname(os.path.realpath(__file__))
-
-# Define the path of the file to import
 file_to_import = os.path.join(current_dir, "..", "training", "ImmoClass_file.py")
 
-# Use importlib to import the module
 spec = importlib.util.spec_from_file_location("ImmoClass", file_to_import)
 ImmoClass = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(ImmoClass)
@@ -18,11 +14,8 @@ def main():
     st.title("Real Estate Price Prediction")
 
     property_type = st.selectbox("Select Property Type", ["HOUSE", "APARTMENT"])
-
-    # Create an instance of ImmoClass
     immo = ImmoClass.ImmoClass(property_type)
 
-    # Collect the necessary input data
     subproperty_type = st.selectbox(
         "Select Subproperty Type",
         [
@@ -122,7 +115,8 @@ def main():
     )
     zip_code = st.number_input("Zip Code")
     total_area_sqm = st.number_input("Total Area (sqm)")
-    surface_land_sqm = st.number_input("Surface Land (sqm)")
+    if property_type != "APARTMENT":
+        surface_land_sqm = st.number_input("Surface Land (sqm)")
     nbr_frontages = st.number_input("Number of Frontages")
     nbr_bedrooms = st.number_input("Number of Bedrooms")
     equipped_kitchen = st.selectbox(
@@ -170,7 +164,6 @@ def main():
     fl_double_glazing = st.checkbox("Double Glazing")
     cadastral_income = st.number_input("Cadastral Income")
 
-    # Convert the checkbox values to integers
     fl_furnished = int(fl_furnished)
     fl_open_fire = int(fl_open_fire)
     fl_terrace = int(fl_terrace)
@@ -179,7 +172,6 @@ def main():
     fl_floodzone = int(fl_floodzone)
     fl_double_glazing = int(fl_double_glazing)
 
-    # Create the input dictionary
     input_data = {
         "subproperty_type": subproperty_type,
         "region": region,
@@ -187,7 +179,6 @@ def main():
         "locality": locality,
         "zip_code": zip_code,
         "total_area_sqm": total_area_sqm,
-        "surface_land_sqm": surface_land_sqm,
         "nbr_frontages": nbr_frontages,
         "nbr_bedrooms": nbr_bedrooms,
         "equipped_kitchen": equipped_kitchen,
@@ -206,10 +197,10 @@ def main():
         "fl_double_glazing": fl_double_glazing,
         "cadastral_income": cadastral_income,
     }
+    if property_type == "HOUSE":
+        input_data["surface_land_sqm"] = surface_land_sqm
 
-    # Add a button for the prediction
     if st.button("Estimate"):
-        # Call the appropriate prediction method
         if subproperty_type in ["HOUSE", "APARTMENT"]:
             prediction = immo.predict_house(input_data)
         else:
