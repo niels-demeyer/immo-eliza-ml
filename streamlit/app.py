@@ -15,6 +15,17 @@ spec_immo.loader.exec_module(ImmoClass)
 from StreamlitClass_file import StreamlitClass
 
 
+def estimate_price(input_data):
+    if input_data["property_type"] == "APARTMENT":
+        model = ImmoClass.ImmoClass("APARTMENT")  # Access the class through the module
+        return model.predict_apartment(input_data)
+    elif input_data["property_type"] == "HOUSE":
+        model = ImmoClass.ImmoClass("HOUSE")  # Access the class through the module
+        return model.predict_house(input_data)
+    else:
+        raise ValueError("Invalid property type")
+
+
 def main():
     st.title("Real Estate App")
 
@@ -51,8 +62,15 @@ def main():
     # Get the input data
     input_data = streamlit.get_input_data()
 
-    # Display the input data
-    st.write(input_data)
+    # # Display the input data
+    # st.write(input_data)
+
+    # Add a button for estimating the price
+    if st.button("Estimate"):
+        # Call the estimate_price function when the button is clicked
+        estimated_price = estimate_price(input_data)
+        # Display the estimated price
+        st.write(f"Estimated price: {estimated_price}")
 
 
 if __name__ == "__main__":
