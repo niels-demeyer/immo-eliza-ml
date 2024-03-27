@@ -1,5 +1,3 @@
-import React, { useState } from "react";
-
 function PostRequestComponent() {
   const [responseData, setResponseData] = useState(null);
   const [showModal, setShowModal] = useState(false);
