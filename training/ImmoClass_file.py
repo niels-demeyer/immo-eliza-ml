@@ -102,13 +102,22 @@ class ImmoClass:
         # Remove the propery_type
         self.data = self.data.drop(columns=["property_type"])
 
-    def print_non_numerical_column_values(self):
+    def print_column_values(self):
         # Iterate over the columns
         for column in self.data.columns:
-            # Check if the column is not numerical
-            if self.data[column].dtype not in ["int64", "float64"]:
-                # Print the unique values of the column
-                print(f"{column}: {self.data[column].unique().tolist()}")
+            # Check if the column is numerical
+            if self.data[column].dtype in ["int64", "float64"]:
+                unique_values = self.data[column].unique().tolist()
+                # Check if the column is boolean
+                if set(unique_values) <= {0, 1}:
+                    print(f"{column} (boolean): {unique_values}")
+                else:
+                    print(f"{column} (numerical)")
+            else:
+                # Print the unique values of the non-numerical column
+                print(
+                    f"{column} (non-numerical): {self.data[column].unique().tolist()}"
+                )
 
     def describe_data(self):
         # Display the first few rows of the dataset
