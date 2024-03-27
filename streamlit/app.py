@@ -23,9 +23,103 @@ def main():
     immo = ImmoClass.ImmoClass(property_type)
 
     # Collect the necessary input data
-    region = st.text_input("Region")
-    province = st.text_input("Province")
-    locality = st.text_input("Locality")
+    subproperty_type = st.selectbox(
+        "Select Subproperty Type",
+        [
+            "APARTMENT",
+            "HOUSE",
+            "DUPLEX",
+            "VILLA",
+            "EXCEPTIONAL_PROPERTY",
+            "FLAT_STUDIO",
+            "GROUND_FLOOR",
+            "PENTHOUSE",
+            "FARMHOUSE",
+            "APARTMENT_BLOCK",
+            "COUNTRY_COTTAGE",
+            "TOWN_HOUSE",
+            "SERVICE_FLAT",
+            "MANSION",
+            "MIXED_USE_BUILDING",
+            "MANOR_HOUSE",
+            "LOFT",
+            "BUNGALOW",
+            "KOT",
+            "CASTLE",
+            "CHALET",
+            "OTHER_PROPERTY",
+            "TRIPLEX",
+        ],
+    )
+    region = st.selectbox(
+        "Region", ["Flanders", "Brussels-Capital", "Wallonia", "MISSING"]
+    )
+    province = st.selectbox(
+        "Province",
+        [
+            "Antwerp",
+            "East Flanders",
+            "Brussels",
+            "Walloon Brabant",
+            "Flemish Brabant",
+            "Liège",
+            "West Flanders",
+            "Hainaut",
+            "Luxembourg",
+            "Limburg",
+            "Namur",
+            "MISSING",
+        ],
+    )
+    locality = st.selectbox(
+        "Locality",
+        [
+            "Antwerp",
+            "Gent",
+            "Brussels",
+            "Turnhout",
+            "Nivelles",
+            "Halle-Vilvoorde",
+            "Liège",
+            "Brugge",
+            "Sint-Niklaas",
+            "Veurne",
+            "Verviers",
+            "Mechelen",
+            "Charleroi",
+            "Dendermonde",
+            "Bastogne",
+            "Leuven",
+            "Hasselt",
+            "Mons",
+            "Aalst",
+            "Tournai",
+            "Oostend",
+            "Oudenaarde",
+            "Philippeville",
+            "Kortrijk",
+            "Dinant",
+            "Ieper",
+            "Huy",
+            "Marche-en-Famenne",
+            "Namur",
+            "Maaseik",
+            "Mouscron",
+            "Diksmuide",
+            "Soignies",
+            "Neufchâteau",
+            "Arlon",
+            "Tongeren",
+            "Waremme",
+            "Thuin",
+            "Virton",
+            "Ath",
+            "Roeselare",
+            "Tielt",
+            "Eeklo",
+            "MISSING",
+        ],
+    )
     zip_code = st.number_input("Zip Code")
     total_area_sqm = st.number_input("Total Area (sqm)")
     surface_land_sqm = st.number_input("Surface Land (sqm)")
@@ -34,37 +128,60 @@ def main():
     equipped_kitchen = st.selectbox(
         "Equipped Kitchen",
         [
-            "NOT_INSTALLED",
-            "SEMI_EQUIPPED",
-            "USA_HYPER_EQUIPPED",
             "INSTALLED",
-            "USA_INSTALLED",
+            "MISSING",
             "HYPER_EQUIPPED",
+            "NOT_INSTALLED",
+            "USA_UNINSTALLED",
+            "USA_HYPER_EQUIPPED",
+            "SEMI_EQUIPPED",
+            "USA_INSTALLED",
+            "USA_SEMI_EQUIPPED",
         ],
     )
-    fl_furnished = st.selectbox("Furnished", [0, 1])
-    fl_open_fire = st.selectbox("Open Fire", [0, 1])
-    fl_terrace = st.selectbox("Terrace", [0, 1])
+    fl_furnished = st.checkbox("Furnished")
+    fl_open_fire = st.checkbox("Open Fire")
+    fl_terrace = st.checkbox("Terrace")
     terrace_sqm = st.number_input("Terrace Area (sqm)")
-    fl_garden = st.selectbox("Garden", [0, 1])
+    fl_garden = st.checkbox("Garden")
     garden_sqm = st.number_input("Garden Area (sqm)")
-    fl_swimming_pool = st.selectbox("Swimming Pool", [0, 1])
-    fl_floodzone = st.selectbox("Floodzone", [0, 1])
+    fl_swimming_pool = st.checkbox("Swimming Pool")
+    fl_floodzone = st.checkbox("Floodzone")
     state_building = st.selectbox(
         "State of Building",
-        ["NEW", "TO_BE_DONE_UP", "GOOD", "JUST_RENOVATED", "TO_RENOVATE"],
+        [
+            "MISSING",
+            "AS_NEW",
+            "GOOD",
+            "TO_RENOVATE",
+            "TO_BE_DONE_UP",
+            "JUST_RENOVATED",
+            "TO_RESTORE",
+        ],
     )
     primary_energy_consumption_sqm = st.number_input("Primary Energy Consumption (sqm)")
-    epc = st.number_input("EPC")
-    heating_type = st.selectbox(
-        "Heating Type", ["GAS", "OIL", "ELECTRIC", "COAL", "WOOD", "SOLAR", "HEAT_PUMP"]
+    epc = st.selectbox(
+        "EPC", ["C", "MISSING", "A", "A+", "D", "B", "E", "G", "F", "A++"]
     )
-    fl_double_glazing = st.selectbox("Double Glazing", [0, 1])
+    heating_type = st.selectbox(
+        "Heating Type",
+        ["GAS", "MISSING", "FUELOIL", "PELLET", "ELECTRIC", "CARBON", "SOLAR", "WOOD"],
+    )
+    fl_double_glazing = st.checkbox("Double Glazing")
     cadastral_income = st.number_input("Cadastral Income")
+
+    # Convert the checkbox values to integers
+    fl_furnished = int(fl_furnished)
+    fl_open_fire = int(fl_open_fire)
+    fl_terrace = int(fl_terrace)
+    fl_garden = int(fl_garden)
+    fl_swimming_pool = int(fl_swimming_pool)
+    fl_floodzone = int(fl_floodzone)
+    fl_double_glazing = int(fl_double_glazing)
 
     # Create the input dictionary
     input_data = {
-        "subproperty_type": property_type,
+        "subproperty_type": subproperty_type,
         "region": region,
         "province": province,
         "locality": locality,
@@ -93,7 +210,7 @@ def main():
     # Add a button for the prediction
     if st.button("Estimate"):
         # Call the appropriate prediction method
-        if property_type == "HOUSE":
+        if subproperty_type in ["HOUSE", "APARTMENT"]:
             prediction = immo.predict_house(input_data)
         else:
             prediction = immo.predict_apartment(input_data)

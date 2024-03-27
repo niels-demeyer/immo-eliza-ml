@@ -102,7 +102,10 @@ class ImmoClass:
         # Remove the propery_type
         self.data = self.data.drop(columns=["property_type"])
 
-    def print_column_values(self):
+    def print_column_values_and_dataset_shape(self):
+        # Print the shape of the entire dataset
+        print(f"Dataset shape: {self.data.shape}")
+
         # Iterate over the columns
         for column in self.data.columns:
             # Check if the column is numerical
