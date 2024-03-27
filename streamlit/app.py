@@ -23,9 +23,10 @@ spec_streamlit.loader.exec_module(StreamlitClass)
 
 
 def main():
+    streamlit = StreamlitClass.StreamlitClass()
     st.title("Real Estate Price Prediction")
 
-    property_type = st.selectbox("Select Property Type", ["HOUSE", "APARTMENT"])
+    property_type = streamlit.selectbox("Select Property Type", ["APARTMENT", "HOUSE"])
     immo = ImmoClass.ImmoClass(property_type)
 
     subproperty_type = st.selectbox(
