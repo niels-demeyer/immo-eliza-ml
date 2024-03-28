@@ -28,12 +28,14 @@ class StreamlitClass:
         self.heating_type = None
         self.fl_double_glazing = None
         self.cadastral_income = None
-        self.belgian_postal_codes = None 
+        self.belgian_postal_codes = None
+        
+        self.load_postal_codes()
         
     def load_postal_codes(self):
         try:
             df = pd.read_csv('../training/data/clean/georef-belgium-postal-codes.csv', delimiter=';', usecols=['Post code', 'Municipality name (Dutch)'])
-            print(df.head())
+            self.belgian_postal_codes = df.set_index('Post code')['Municipality name (Dutch)'].to_dict()
         except pd.errors.ParserError as e:
             print(f"Error: {e}")
 
@@ -156,20 +158,20 @@ class StreamlitClass:
                 "Eeklo",
             ],
         )
-
     def select_zip_code(self):
-        zip_code = st.text_input("Zip Code", "")
+        zip_code = st.selectbox("Zip Code", list(self.belgian_postal_codes.keys()))
         if zip_code:
-            if zip_code.isdigit() and 1000 <= int(zip_code) <= 9999:
+            if 1000 <= zip_code <= 9999:
                 self.zip_code = zip_code
+                st.success(f"Zip code {zip_code} corresponds to the municipality {self.belgian_postal_codes[zip_code]}.")
             else:
                 st.error("Please enter a valid Belgian zip code.")
 
-    def select_total_area_sqm(self):
-        self.total_area_sqm = self.number_input("Total Area (sqm)", 0, 50000, 50)
-
     def select_surface_land_sqm(self):
         self.surface_land_sqm = self.number_input("Surface Land (sqm)",  0, 50000, 50)
+        
+    def select_total_area_sqm(self):
+        self.total_area_sqm = st.number_input("Total Area (sqm)", 0, 10000, 50)
 
     def select_nbr_frontages(self):
         self.nbr_frontages = self.number_input("Number of Frontages", 0, 10, 1)
