@@ -1,5 +1,5 @@
 import streamlit as st
-
+import pandas as pd
 
 class StreamlitClass:
     def __init__(self):
@@ -28,6 +28,14 @@ class StreamlitClass:
         self.heating_type = None
         self.fl_double_glazing = None
         self.cadastral_income = None
+        self.belgian_postal_codes = None 
+        
+    def load_postal_codes(self):
+        try:
+            df = pd.read_csv('../training/data/clean/georef-belgium-postal-codes.csv', delimiter=';', usecols=['Post code', 'Municipality name (Dutch)'])
+            print(df.head())
+        except pd.errors.ParserError as e:
+            print(f"Error: {e}")
 
     def selectbox(self, label, options):
         return st.selectbox(label, options)
