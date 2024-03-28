@@ -2,7 +2,8 @@
 
 ## Description 📝
 
-This project aims to make a price prediction model using machine learning.
+This project aims to make a price prediction model for real estate using machine learning.
+You can check out the result via [this link.](https://immo-eliza-ml-niels-demeyer.streamlit.app/)
 
 ## Table of Contents
 
