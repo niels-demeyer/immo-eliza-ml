@@ -150,19 +150,24 @@ class StreamlitClass:
         )
 
     def select_zip_code(self):
-        self.zip_code = self.number_input("Zip Code")
+        zip_code = st.text_input("Zip Code", "")
+        if zip_code:
+            if zip_code.isdigit() and 1000 <= int(zip_code) <= 9999:
+                self.zip_code = zip_code
+            else:
+                st.error("Please enter a valid Belgian zip code.")
 
     def select_total_area_sqm(self):
-        self.total_area_sqm = self.number_input("Total Area (sqm)")
+        self.total_area_sqm = self.number_input("Total Area (sqm)", 0, 50000, 50)
 
     def select_surface_land_sqm(self):
-        self.surface_land_sqm = self.number_input("Surface Land (sqm)")
+        self.surface_land_sqm = self.number_input("Surface Land (sqm)",  0, 50000, 50)
 
     def select_nbr_frontages(self):
-        self.nbr_frontages = self.number_input("Number of Frontages")
+        self.nbr_frontages = self.number_input("Number of Frontages", 0, 10, 1)
 
     def select_nbr_bedrooms(self):
-        self.nbr_bedrooms = self.number_input("Number of Bedrooms")
+        self.nbr_bedrooms = self.number_input("Number of Bedrooms", 0, 20, 1)
 
     def select_equipped_kitchen(self):
         self.equipped_kitchen = self.selectbox(
@@ -193,14 +198,14 @@ class StreamlitClass:
         self.fl_terrace = self.convert_to_int(self.fl_terrace)
 
     def select_terrace_sqm(self):
-        self.terrace_sqm = self.number_input("Terrace Area (sqm)")
+        self.terrace_sqm = self.number_input("Terrace Area (sqm)", 0, 500, 50)
 
     def select_fl_garden(self):
         self.fl_garden = self.checkbox("Garden")
         self.fl_garden = self.convert_to_int(self.fl_garden)
 
     def select_garden_sqm(self):
-        self.garden_sqm = self.number_input("Garden Area (sqm)")
+        self.garden_sqm = self.number_input("Garden Area (sqm)", 0, 5000, 50)
 
     def select_fl_swimming_pool(self):
         self.fl_swimming_pool = self.checkbox("Swimming Pool")
@@ -227,7 +232,7 @@ class StreamlitClass:
 
     def select_primary_energy_consumption_sqm(self):
         self.primary_energy_consumption_sqm = self.number_input(
-            "Primary Energy Consumption (kWh/m²/year)"
+            "Primary Energy Consumption (kWh/m²/year)", 0, 500, 10
         )
 
     def select_epc(self):
@@ -255,7 +260,7 @@ class StreamlitClass:
         self.fl_double_glazing = self.convert_to_int(self.fl_double_glazing)
 
     def select_cadastral_income(self):
-        self.cadastral_income = self.number_input("Cadastral Income")
+        self.cadastral_income = self.number_input("Cadastral Income", 0, 20000, 500)
 
     def get_input_data(self):
         input_data = {
