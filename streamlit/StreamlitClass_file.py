@@ -40,13 +40,13 @@ class StreamlitClass:
             print(f"Error: {e}")
 
     def selectbox(self, label, options):
-        return st.selectbox(label, options)
+        return st.selectbox(label, [""] + options)
 
-    def number_input(self, label, min_value=0, max_value=100, value=50):
+    def number_input(self, label, min_value=0, max_value=100, value=None):
         return st.slider(label, min_value, max_value, value)
 
     def checkbox(self, label):
-        return st.checkbox(label)
+        return st.checkbox(label, False)
 
     def convert_to_int(self, boolean_value):
         return int(boolean_value)
