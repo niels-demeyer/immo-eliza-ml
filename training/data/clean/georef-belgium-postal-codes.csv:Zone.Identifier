@@ -1,0 +1,4 @@
+[ZoneTransfer]
+ZoneId=3
+ReferrerUrl=https://public.opendatasoft.com/explore/dataset/georef-belgium-postal-codes/export/
+HostUrl=https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/georef-belgium-postal-codes/exports/csv?lang=en&timezone=Europe%2FBerlin&use_labels=true&delimiter=%3B
