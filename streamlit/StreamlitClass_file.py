@@ -235,7 +235,7 @@ class StreamlitClass:
 
     def select_epc(self):
         self.epc = self.selectbox(
-            "EPC", ["A++" "A+", "A", "B","C", "D", "E","F","G"]
+            "EPC", ["A++","A+", "A", "B","C", "D", "E","F","G"]
         )
 
     def select_heating_type(self):
