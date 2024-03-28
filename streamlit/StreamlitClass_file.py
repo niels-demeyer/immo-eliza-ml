@@ -34,7 +34,7 @@ class StreamlitClass:
         
     def load_postal_codes(self):
         try:
-            df = pd.read_csv('georef-belgium-postal-codes.csv', delimiter=';', usecols=['Post code', 'Municipality name (Dutch)'])
+            df = pd.read_csv('./georef-belgium-postal-codes.csv', delimiter=';', usecols=['Post code', 'Municipality name (Dutch)'])
             self.belgian_postal_codes = df.set_index('Post code')['Municipality name (Dutch)'].to_dict()
         except pd.errors.ParserError as e:
             print(f"Error: {e}")
