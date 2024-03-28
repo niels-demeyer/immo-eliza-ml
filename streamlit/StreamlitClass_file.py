@@ -174,7 +174,6 @@ class StreamlitClass:
             "Equipped Kitchen",
             [
                 "INSTALLED",
-                "MISSING",
                 "HYPER_EQUIPPED",
                 "NOT_INSTALLED",
                 "USA_UNINSTALLED",
@@ -219,7 +218,6 @@ class StreamlitClass:
         self.state_building = self.selectbox(
             "State of Building",
             [
-                "MISSING",
                 "TO_BE_DONE_UP",
                 "TO_RENOVATE",
                 "GOOD",
@@ -237,7 +235,7 @@ class StreamlitClass:
 
     def select_epc(self):
         self.epc = self.selectbox(
-            "EPC", ["C", "MISSING", "A", "A+", "D", "B", "E", "G", "F", "A++"]
+            "EPC", ["A++" "A+", "A", "B","C", "D", "E","F","G"]
         )
 
     def select_heating_type(self):
@@ -245,7 +243,6 @@ class StreamlitClass:
             "Heating Type",
             [
                 "GAS",
-                "MISSING",
                 "FUELOIL",
                 "PELLET",
                 "ELECTRIC",
