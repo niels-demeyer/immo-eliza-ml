@@ -32,8 +32,8 @@ class StreamlitClass:
     def selectbox(self, label, options):
         return st.selectbox(label, options)
 
-    def number_input(self, label):
-        return st.number_input(label)
+    def number_input(self, label, min_value=0, max_value=100, value=50):
+        return st.slider(label, min_value, max_value, value)
 
     def checkbox(self, label):
         return st.checkbox(label)
