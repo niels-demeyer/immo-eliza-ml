@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 
+
 class StreamlitClass:
     def __init__(self):
         self.property_type = None
@@ -29,15 +30,21 @@ class StreamlitClass:
         self.fl_double_glazing = None
         self.cadastral_income = None
         self.belgian_postal_codes = None
-        
+
         self.load_postal_codes()
-        
+
     def load_postal_codes(self):
         try:
-            df = pd.read_csv('streamlit/georef-belgium-postal-codes.csv', delimiter=';', usecols=['Post code', 'Municipality name (Dutch)'])
-            df = df[~df['Post code'].isin([9, 612])]
-            df = df.sort_values('Post code')
-            self.belgian_postal_codes = df.set_index('Post code')['Municipality name (Dutch)'].to_dict()
+            df = pd.read_csv(
+                "streamlit/georef-belgium-postal-codes.csv",
+                delimiter=";",
+                usecols=["Post code", "Municipality name (Dutch)"],
+            )
+            df = df[~df["Post code"].isin([9, 612])]
+            df = df.sort_values("Post code")
+            self.belgian_postal_codes = df.set_index("Post code")[
+                "Municipality name (Dutch)"
+            ].to_dict()
         except pd.errors.ParserError as e:
             print(f"Error: {e}")
 
@@ -160,18 +167,27 @@ class StreamlitClass:
                 "Eeklo",
             ],
         )
-    def select_zip_code(self):
+
+    def select_zip_code_and_name(self):
         zip_code = st.selectbox("Zip Code", list(self.belgian_postal_codes.keys()))
-        if zip_code:
+        name = st.text_input("Name", "")
+        if zip_code and name:
             if 1000 <= zip_code <= 9999:
                 self.zip_code = zip_code
-                st.success(f"Zip code {zip_code} corresponds to the municipality {self.belgian_postal_codes[zip_code]}.")
+                self.name = name
+                st.success(
+                    f"Zip code {zip_code} corresponds to the municipality {self.belgian_postal_codes[zip_code]}. Name is {name}."
+                )
             else:
                 st.error("Please enter a valid Belgian zip code.")
+        elif name:
+            st.error("Please enter a zip code.")
+        elif zip_code:
+            st.error("Please enter a name.")
 
     def select_surface_land_sqm(self):
-        self.surface_land_sqm = self.number_input("Surface Land (sqm)",  0, 50000, 50)
-        
+        self.surface_land_sqm = self.number_input("Surface Land (sqm)", 0, 50000, 50)
+
     def select_total_area_sqm(self):
         self.total_area_sqm = st.number_input("Total Area (sqm)", 0, 10000, 50)
 
@@ -247,7 +263,7 @@ class StreamlitClass:
 
     def select_epc(self):
         self.epc = self.selectbox(
-            "EPC", ["A++","A+", "A", "B","C", "D", "E","F","G"]
+            "EPC", ["A++", "A+", "A", "B", "C", "D", "E", "F", "G"]
         )
 
     def select_heating_type(self):
