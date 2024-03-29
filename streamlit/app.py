@@ -38,7 +38,7 @@ def main():
     streamlit.select_region()
     streamlit.select_province()
     streamlit.select_locality()
-    streamlit.select_zip_code()
+    streamlit.select_zip_code_and_name()
     streamlit.select_total_area_sqm()
     streamlit.select_surface_land_sqm()
     streamlit.select_nbr_frontages()
