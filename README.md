@@ -32,6 +32,7 @@ Ensure you have Git and Python installed on your system. Some commands in the ma
 ## Usage 🚀
 
 **run the model files**
+
 1. Choose the desired script based on the machine learning algorithm you want to use (KNN, Linear Regression, Random Forest Regression, or XGBoost Regression).
 2. Run the script using the command line or terminal:
    - For KNN: `python knn.py`
@@ -44,9 +45,13 @@ Ensure you have Git and Python installed on your system. Some commands in the ma
 
 Define a property you want a prediction on in the `python predict.py` and the xgboost model will be used to give you a prediction.
 
-## API
+## API 🌐
+
 The results of the models can be served trough a flask api. This can be done in two ways: flask, docker
+![Flask Logo](./repo/flask-svgrepo-com.svg)
+
 1. To serve the api locally with flask you can run `flask run app.py` in the `server` folder
+   ![Docker Logo](./repo/docker-svgrepo-com.svg)
 2. You can also serve the api containerized by using the dockerfile. The port is set to 5000 so to test it out on your device `docker run -p 5000:5000 immo-eliza-api`
 
 ```
@@ -54,8 +59,10 @@ The results of the models can be served trough a flask api. This can be done in 
 curl -X POST -H "Content-Type: application/json" -d '{"subproperty_type": "HOUSE","region": "Flanders","province": "Antwerp","locality": "Antwerp","zip_code": 2050,"total_area_sqm": 200.0,"surface_land_sqm": 100.0,"nbr_frontages": 2,"nbr_bedrooms": 3,"equipped_kitchen": "INSTALLED","fl_furnished": 0,"fl_open_fire": 0,"fl_terrace": 1,"terrace_sqm": 20.0,"fl_garden": 1,"garden_sqm": 50.0,"fl_swimming_pool": 0,"fl_floodzone": 0,"state_building": "NEW","primary_energy_consumption_sqm": 100.0,"epc": 200,"heating_type": "GAS","fl_double_glazing": 1,"cadastral_income": 2000}' http://127.0.0.1:5000/predict/house
 ```
 
-## Streamlit
-The most user friendly way to interact with the model is to use the [streamlit](https://immo-eliza-ml-niels-demeyer.streamlit.app/) application. 
+## Streamlit 🌐
+
+![Streamlit Logo](./repo/streamlit-logo-primary-colormark-darktext.svg)
+The most user friendly way to interact with the model is to use the [streamlit](https://immo-eliza-ml-niels-demeyer.streamlit.app/) application.
 
 To run the streamlit application locally you need to use the command `streamlit run app.py` in the streamlit folder.
 
