@@ -49,13 +49,7 @@ Define a property you want a prediction on in the `python predict.py` and the xg
 
 The results of the models can be served trough a flask api. This can be done in two ways: flask, docker
 
-<div style="background-color:white; text-align:center;">
-    <img src="./repo/flask-svgrepo-com.svg" alt="Flask Logo" width="100" height="100">
-</div>
 1. To serve the api locally with flask you can run `flask run app.py` in the `server` folder
-<div style="background-color:white; text-align:center;">
-   <img src="./repo/docker-svgrepo-com.svg" alt="Docker Logo" width="100" height="100">
-</div>
 2. You can also serve the api containerized by using the dockerfile. The port is set to 5000 so to test it out on your device `docker run -p 5000:5000 immo-eliza-api`
 
 ```
@@ -64,10 +58,6 @@ curl -X POST -H "Content-Type: application/json" -d '{"subproperty_type": "HOUSE
 ```
 
 ## Streamlit 🌐
-
-<div style="background-color:white; text-align:center;">
-    <img src="./repo/streamlit-logo-primary-colormark-darktext.svg" alt="Streamlit Logo" width="100" height="100">
-</div>
 
 The most user friendly way to interact with the model is to use the [streamlit](https://immo-eliza-ml-niels-demeyer.streamlit.app/) application.
 
