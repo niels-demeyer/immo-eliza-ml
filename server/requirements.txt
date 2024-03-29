@@ -1,9 +1,0 @@
-streamlit
-numpy
-plotly
-pandas
-scikit-learn
-joblib
-xgboost
-flask
-flask_cors
